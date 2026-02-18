@@ -14,7 +14,7 @@
   --font-body: 'DM Sans', system-ui, sans-serif;
   --header-height: clamp(3rem, 8vw, 4.5rem);
   --section-padding: clamp(3rem, 8vw, 6rem);
-  --content-width: min(90vw, 720px);
+  --content-width: min(92vw, 1200px);
   --blur-bg: rgba(10, 14, 23, 0.85);
 }
 

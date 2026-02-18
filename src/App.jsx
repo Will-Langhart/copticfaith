@@ -73,7 +73,13 @@ function App() {
 
   return (
     <div className="app">
-      <Header visible={headerVisible} onNavigateClick={() => setNavOpen(true)} />
+      <Header
+        visible={headerVisible}
+        sections={SECTIONS}
+        activeId={activeSection}
+        onNavigateClick={() => setNavOpen(true)}
+        onSelect={scrollTo}
+      />
       <NavOverlay
         isOpen={navOpen}
         sections={SECTIONS}
