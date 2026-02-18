@@ -70,15 +70,15 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Scripture block: gold border */
+/* Scripture block: gold border — upright (non-italic) for readability */
 .scripture-block {
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: clamp(0.95rem, 2vw, 1.05rem);
   padding: clamp(1rem, 3vw, 1.5rem);
   margin: 1.25rem 0;
   border-left: 3px solid var(--color-gold);
   background: rgba(201, 162, 39, 0.06);
-  font-style: italic;
+  font-style: normal;
   color: var(--color-text);
 }
 
@@ -90,13 +90,14 @@ a:hover {
   margin-bottom: 0.35em;
 }
 
-/* Father quote: blue border */
+/* Father quote: blue border — upright for readability */
 .father-quote {
+  font-family: var(--font-body);
   padding: clamp(1rem, 3vw, 1.5rem);
   margin: 1.25rem 0;
   border-left: 3px solid var(--color-blue);
   background: rgba(91, 125, 177, 0.08);
-  font-style: italic;
+  font-style: normal;
   color: var(--color-text-muted);
 }
 

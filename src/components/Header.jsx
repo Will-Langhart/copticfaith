@@ -1,9 +1,9 @@
 const SHORT_LABELS = {
   hero: 'Home',
   note: 'Note',
-  foundation: 'Part 1',
-  historical: 'Part 2',
-  doctrines: 'Part 3',
+  foundation: 'Biblical',
+  historical: 'History',
+  doctrines: 'Doctrines',
   eucharist: 'Eucharist',
   mysteries: 'Mysteries',
   fasting: 'Fasting',
@@ -30,17 +30,9 @@ export default function Header({ visible, sections = [], activeId, onNavigateCli
         onClick={(e) => handleNavClick(e, 'hero')}
         aria-label="The Ancient Faith – Home"
       >
+        {/* Replace public/logo.svg with your own SVG file to change the logo */}
         <span className="header__logo-svg" aria-hidden>
-          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M16 2v28M6 12h20M6 20h20M16 12l-6 6 6 6 6-6-6-6z"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <circle cx="16" cy="16" r="2.5" fill="currentColor" />
-          </svg>
+          <img src="/logo.svg" alt="" width="28" height="28" />
         </span>
         <span className="header__logo-text">The Ancient Faith</span>
       </a>
