@@ -1,0 +1,182 @@
+/* Design tokens: dark mode, gold accents, cream on deep navy */
+:root {
+  --color-bg: #0a0e17;
+  --color-bg-elevated: #0f1420;
+  --color-text: #f5f0e6;
+  --color-text-muted: #c4bcac;
+  --color-gold: #c9a227;
+  --color-gold-light: #e4c55a;
+  --color-gold-dark: #9a7b1a;
+  --color-blue: #5b7db1;
+  --color-blue-light: #7a9bc9;
+  --color-divider: rgba(201, 162, 39, 0.3);
+  --font-heading: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --header-height: clamp(3rem, 8vw, 4.5rem);
+  --section-padding: clamp(3rem, 8vw, 6rem);
+  --content-width: min(90vw, 720px);
+  --blur-bg: rgba(10, 14, 23, 0.85);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-height);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+  line-height: 1.7;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); }
+h2 { font-size: clamp(1.5rem, 4vw, 2.2rem); }
+h3 { font-size: clamp(1.2rem, 3vw, 1.6rem); }
+
+em {
+  font-style: italic;
+  color: var(--color-gold-light);
+}
+
+a {
+  color: var(--color-gold);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-gold-light);
+  text-decoration: underline;
+}
+
+/* Scripture block: gold border */
+.scripture-block {
+  font-family: var(--font-heading);
+  font-size: clamp(0.95rem, 2vw, 1.05rem);
+  padding: clamp(1rem, 3vw, 1.5rem);
+  margin: 1.25rem 0;
+  border-left: 3px solid var(--color-gold);
+  background: rgba(201, 162, 39, 0.06);
+  font-style: italic;
+  color: var(--color-text);
+}
+
+.scripture-block .ref {
+  display: block;
+  font-size: 0.85em;
+  font-style: normal;
+  color: var(--color-gold);
+  margin-bottom: 0.35em;
+}
+
+/* Father quote: blue border */
+.father-quote {
+  padding: clamp(1rem, 3vw, 1.5rem);
+  margin: 1.25rem 0;
+  border-left: 3px solid var(--color-blue);
+  background: rgba(91, 125, 177, 0.08);
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+.father-quote .ref {
+  display: block;
+  font-size: 0.9em;
+  font-style: normal;
+  color: var(--color-blue-light);
+  margin-bottom: 0.35em;
+}
+
+/* Protestant source note */
+.protestant-note {
+  font-size: 0.9em;
+  color: var(--color-text-muted);
+  margin: 1rem 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--color-text-muted);
+}
+
+.protestant-note::before {
+  content: "▶ ";
+  font-weight: 600;
+  color: var(--color-gold);
+}
+
+/* Section divider */
+.section-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: clamp(2rem, 5vw, 3rem) 0;
+  color: var(--color-gold);
+  font-size: 0.9em;
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: "";
+  flex: 1;
+  max-width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-divider));
+}
+
+.section-divider::after {
+  background: linear-gradient(270deg, transparent, var(--color-divider));
+}
+
+.section-divider--rule::before,
+.section-divider--rule::after {
+  display: none;
+}
+
+.timeline-list {
+  margin: 1.5rem 0;
+  padding-left: 1.5rem;
+  list-style: none;
+}
+
+.timeline-list li {
+  position: relative;
+  margin: 0.75rem 0;
+  padding-left: 0.5rem;
+}
+
+.timeline-list li::before {
+  content: "•";
+  position: absolute;
+  left: -1rem;
+  color: var(--color-gold);
+}
+
+.appendix-list {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+  list-style: disc;
+}
+
+.appendix-list li {
+  margin: 0.5rem 0;
+}
