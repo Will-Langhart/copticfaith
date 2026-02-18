@@ -30,9 +30,8 @@ export default function Header({ visible, sections = [], activeId, onNavigateCli
         onClick={(e) => handleNavClick(e, 'hero')}
         aria-label="The Ancient Faith – Home"
       >
-        {/* Replace public/logo.svg with your own SVG file to change the logo */}
         <span className="header__logo-svg" aria-hidden>
-          <img src="/logo.svg" alt="" width="28" height="28" />
+          <img src="/logo.png" alt="" width="32" height="32" />
         </span>
         <span className="header__logo-text">The Ancient Faith</span>
       </a>

@@ -56,8 +56,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   color: var(--color-gold);
   transition: color 0.2s ease;
 }
