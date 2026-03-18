@@ -1,0 +1,142 @@
+@media print {
+  /* Hide all navigation and UI chrome */
+  .header,
+  .side-dots,
+  .nav-overlay,
+  .progress-bar,
+  .search-modal,
+  .share-bar,
+  .section-nav,
+  .hero__btn,
+  .toc-overlay,
+  .header__menu-btn,
+  .dark-toggle,
+  .lang-toggle {
+    display: none !important;
+  }
+
+  /* Reset backgrounds for print */
+  body,
+  .app,
+  .section,
+  .hero {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Hero: remove backdrop image for print */
+  .hero {
+    background-image: none !important;
+    padding: 2cm 1cm 1cm !important;
+    min-height: auto !important;
+  }
+
+  .hero::before,
+  .hero::after {
+    display: none !important;
+  }
+
+  .hero__title,
+  .hero__subtitle,
+  .hero__star {
+    color: black !important;
+    text-shadow: none !important;
+  }
+
+  .hero__scripture {
+    color: #4a3800 !important;
+  }
+
+  /* Sections: page breaks between them */
+  .section {
+    min-height: auto !important;
+    page-break-after: always;
+    padding: 1cm !important;
+  }
+
+  .section:last-child {
+    page-break-after: auto;
+  }
+
+  /* Gold text: darken for printability */
+  h2, .hero__subtitle, .section h2 {
+    color: #4a3800 !important;
+  }
+
+  h3 {
+    color: black !important;
+  }
+
+  .section-divider {
+    color: #4a3800 !important;
+  }
+
+  /* Scripture and father quote blocks */
+  .scripture-block {
+    border-left-color: #4a3800 !important;
+    background: #f9f6f0 !important;
+    color: black !important;
+  }
+
+  .scripture-block .ref {
+    color: #4a3800 !important;
+  }
+
+  .father-quote {
+    border-left-color: #1a3a6a !important;
+    background: #f0f4fa !important;
+    color: black !important;
+  }
+
+  .father-quote .ref {
+    color: #1a3a6a !important;
+  }
+
+  /* Force all expandable quotes open */
+  .father-quote-body {
+    max-height: none !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  .father-quote-toggle {
+    display: none !important;
+  }
+
+  /* Protestant notes */
+  .protestant-note {
+    border-left-color: #555 !important;
+    color: #333 !important;
+  }
+
+  /* Links: show URLs */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.75em;
+    color: #555;
+  }
+
+  a[href^="#"]::after {
+    content: "";
+  }
+
+  /* Typography adjustments for print */
+  body {
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+    font-family: Georgia, 'Times New Roman', serif !important;
+  }
+
+  h1 { font-size: 24pt !important; }
+  h2 { font-size: 18pt !important; }
+  h3 { font-size: 14pt !important; }
+
+  /* Prevent orphaned headings */
+  h2, h3, h4 {
+    page-break-after: avoid;
+  }
+
+  blockquote, .scripture-block, .father-quote {
+    page-break-inside: avoid;
+  }
+}

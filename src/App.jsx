@@ -1,8 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
-import Header from './components/Header';
-import NavOverlay from './components/NavOverlay';
-import SideDots from './components/SideDots';
-import Section1 from './sections/Section1';
+// App.jsx is superseded by src/router/routes.jsx + src/pages/MainPage.jsx
+// Kept as a stub; main.jsx renders <RouterProvider> directly.
+export default function App() { return null; }
+
+// Original imports preserved below for reference (no longer used):
+// import { useState, useEffect, useCallback } from 'react';
+// import Header from './components/Header';
+// import NavOverlay from './components/NavOverlay';
+// import SideDots from './components/SideDots';
+// import Section1 from './sections/Section1';
 import Section2 from './sections/Section2';
 import Section3 from './sections/Section3';
 import Section4 from './sections/Section4';

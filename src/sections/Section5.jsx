@@ -1,3 +1,5 @@
+import FatherQuote from '../components/FatherQuote';
+
 export default function Section5() {
   return (
     <>
@@ -122,10 +124,9 @@ export default function Section5() {
       <p>
         The Didache is one of the oldest Christian documents outside the New Testament, dating from the late first century. It preserves instructions for Christian worship that likely originate with the Apostles themselves:
       </p>
-      <blockquote className="father-quote">
-        <span className="ref">Didache 9:5 (c. 50–100 AD)</span>
+      <FatherQuote work="Didache 9:5" year="c. 50–100 AD">
         "Let no one eat or drink of your Eucharist except those who have been baptized in the name of the Lord; for of a truth the Lord hath said concerning this, 'Give not that which is holy unto dogs.'"
-      </blockquote>
+      </FatherQuote>
       <p>
         The Didache applies Jesus's own words from Matthew 7:6 to the Eucharist, categorizing it as something "holy" that must be protected. This is not the language one uses about a symbol. You do not protect a symbol from the unbaptized; you protect the sacred.
       </p>
@@ -134,17 +135,15 @@ export default function Section5() {
       <p>
         Ignatius was a bishop who had personally known the Apostles. He was a disciple of John and was appointed bishop of Antioch by Peter himself. He wrote his letters while being transported to Rome for execution. His testimony carries extraordinary weight because of his direct apostolic connection.
       </p>
-      <blockquote className="father-quote">
-        <span className="ref">Ignatius, Letter to the Smyrnaeans 7:1 (c. 107 AD)</span>
+      <FatherQuote author="Ignatius of Antioch" work="Letter to the Smyrnaeans 7:1" year="c. 107 AD">
         "They abstain from the Eucharist and from prayer because they do not confess that the Eucharist is the flesh of our Savior Jesus Christ, flesh which suffered for our sins and which the Father, in his goodness, raised up again."
-      </blockquote>
+      </FatherQuote>
       <p>
         Ignatius identifies the Eucharist as the flesh of Jesus Christ—the same flesh that suffered, died, and was raised. He was writing against the Docetists, who denied that Christ had a real body. His argument only works if the Eucharist truly is what it claims to be: if the Eucharist is merely symbolic bread, it would prove nothing against those who denied the reality of Christ's body.
       </p>
-      <blockquote className="father-quote">
-        <span className="ref">Ignatius, Letter to the Romans 7:3 (c. 107 AD)</span>
+      <FatherQuote author="Ignatius of Antioch" work="Letter to the Romans 7:3" year="c. 107 AD">
         "I desire the bread of God, which is the flesh of Jesus Christ, who was of the seed of David; and for drink I desire His blood, which is love incorruptible."
-      </blockquote>
+      </FatherQuote>
       <p className="protestant-note">
         Source: Ignatius of Antioch, Letters. Available in The Apostolic Fathers, translated by Bart Ehrman (Loeb Classical Library, Harvard University Press, 2003)—Ehrman is a well-known agnostic New Testament scholar, making his translation free of any confessional bias.
       </p>
@@ -153,10 +152,9 @@ export default function Section5() {
       <p>
         Justin was a philosopher who converted to Christianity. In his First Apology, written around 151 AD to the Roman Emperor, he describes Christian worship practices for a non-Christian audience. His description of the Eucharist is the earliest detailed account outside Scripture:
       </p>
-      <blockquote className="father-quote">
-        <span className="ref">Justin Martyr, First Apology 66 (c. 151 AD)</span>
+      <FatherQuote author="Justin Martyr" work="First Apology 66" year="c. 151 AD">
         "For not as common bread nor common drink do we receive these; but since Jesus Christ our Savior was made incarnate by the word of God and had both flesh and blood for our salvation, so too, as we have been taught, the food which has been made into the Eucharist by the Eucharistic prayer set down by Him, and by the change of which our blood and flesh is nourished, is both the flesh and the blood of that incarnated Jesus."
-      </blockquote>
+      </FatherQuote>
       <p>
         Justin explicitly states that the Eucharistic elements are not common bread and drink, but have become the flesh and blood of the incarnate Jesus. He is writing for an educated pagan emperor, so he has every reason to soften his language if it were merely metaphorical. Instead, he makes the strongest possible claim.
       </p>
@@ -168,14 +166,12 @@ export default function Section5() {
       <p>
         Irenaeus was a student of Polycarp, who was himself a disciple of the Apostle John. This gives Irenaeus a chain of testimony only two links removed from Christ. In his great work against Gnostic heresies, he appeals to the Eucharist:
       </p>
-      <blockquote className="father-quote">
-        <span className="ref">Irenaeus, Against Heresies 4:18:5 (c. 189 AD)</span>
+      <FatherQuote author="Irenaeus of Lyons" work="Against Heresies 4:18:5" year="c. 189 AD">
         "How can they say that the flesh which has been nourished by the body of the Lord and by His blood gives way to corruption and does not partake of life? For as the bread from the earth, receiving the invocation of God, is no longer common bread but the Eucharist, consisting of two elements, earthly and heavenly—so also our bodies, receiving the Eucharist, are no longer corruptible, having the hope of eternal resurrection."
-      </blockquote>
-      <blockquote className="father-quote">
-        <span className="ref">Irenaeus, Against Heresies 5:2:2–3 (c. 189 AD)</span>
+      </FatherQuote>
+      <FatherQuote author="Irenaeus of Lyons" work="Against Heresies 5:2:2–3" year="c. 189 AD">
         "He has declared the cup, a part of creation, to be His own blood, from which He causes our blood to flow; and the bread, a part of creation, He has established as His own body, from which He gives increase unto our bodies. When, therefore, the mixed cup and the baked bread receives the Word of God and becomes the Eucharist, the body of Christ… how can they say that the flesh is not capable of receiving the gift of God, which is eternal life—flesh which is nourished by the body and blood of the Lord?"
-      </blockquote>
+      </FatherQuote>
       <p>
         Irenaeus's argument is specifically anti-Gnostic: the Gnostics denied that physical matter could participate in salvation. Irenaeus responds that the bread truly becomes the body of Christ, and our bodies are nourished by that body—therefore physical matter is capable of receiving eternal life. This argument collapses entirely if the Eucharist is merely symbolic.
       </p>
@@ -194,10 +190,9 @@ export default function Section5() {
       <p>
         Cyril—the same Coptic Pope who defended the Incarnation at the Council of Ephesus—wrote extensively on the Eucharist, connecting it directly to the Incarnation. His logic is powerful: because the Word truly became flesh, His flesh is truly life-giving, and it is this life-giving flesh that is given in the Eucharist.
       </p>
-      <blockquote className="father-quote">
-        <span className="ref">Cyril of Alexandria, Letter to Nestorius, read at the Council of Ephesus (431 AD)</span>
+      <FatherQuote author="Cyril of Alexandria" work="Letter to Nestorius, read at the Council of Ephesus" year="431 AD">
         "Proclaiming the death, according to the flesh, of the only-begotten Son of God, that is Jesus Christ, confessing His resurrection from the dead, and His ascension into heaven, we offer the un-bloody sacrifice in the churches, and so go on to the mystical thanksgivings, and are sanctified, having received His holy flesh and the precious blood of Christ the Savior of us all. And not as common flesh do we receive it; God forbid: nor as of a man sanctified… but as truly the life-giving and very flesh of the Word Himself. For He is the life according to His nature as God, and when He became united to His flesh, He made it also to be life-giving."
-      </blockquote>
+      </FatherQuote>
       <p>
         Cyril explicitly distinguishes the Eucharist from "common flesh" and identifies it as "truly the life-giving and very flesh of the Word Himself." This was not a private opinion; it was read aloud and affirmed at an ecumenical council attended by over two hundred bishops—a council whose Christological decisions are accepted by Protestants.
       </p>
@@ -209,9 +204,9 @@ export default function Section5() {
       <p>
         The oldest Coptic liturgy—tracing back to the form used by Mark himself and later translated into Coptic by Cyril I—centers entirely on the Eucharist. The Liturgy of Saint Basil, the most commonly used form in Coptic churches today, includes the following prayer at the consecration, which the congregation has prayed in substantially this form for over fifteen centuries:
       </p>
-      <blockquote className="father-quote">
+      <FatherQuote work="Coptic Divine Liturgy of Saint Basil — Consecration Prayer">
         Priest: "This is in truth the Body and the Blood of Emmanuel our God. Amen. I believe, I believe, I believe and confess to the last breath that this is the Life-giving Body that Your Only-begotten Son, our Lord, God and Savior Jesus Christ took from our lady, the Mother of God, Saint Mary."
-      </blockquote>
+      </FatherQuote>
       <p>
         Note the parallels: the Coptic liturgical confession echoes Cyril's Christology (the flesh of the Word Himself), Ignatius's insistence (the flesh that suffered), and Paul's solemn language (the body of the Lord). This is not a later medieval development; it is the continuous practice of a church that has celebrated this sacrament without interruption since the first century.
       </p>

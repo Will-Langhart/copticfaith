@@ -181,3 +181,20 @@ a:hover {
 .appendix-list li {
   margin: 0.5rem 0;
 }
+
+/* Arabic language support */
+[lang="ar"] body,
+[dir="rtl"] body {
+  font-family: 'Noto Sans Arabic', system-ui, sans-serif;
+}
+
+[lang="ar"] h1,
+[lang="ar"] h2,
+[lang="ar"] h3,
+[lang="ar"] h4,
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4 {
+  font-family: 'Noto Sans Arabic', Georgia, serif;
+}

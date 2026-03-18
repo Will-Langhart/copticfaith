@@ -1,0 +1,109 @@
+{
+  "site_title": "The Ancient Faith",
+  "tagline": "Once Delivered to the Saints",
+  "nav": {
+    "home": "Home",
+    "note": "Note",
+    "foundation": "Biblical",
+    "historical": "History",
+    "doctrines": "Doctrines",
+    "eucharist": "Eucharist",
+    "mysteries": "Mysteries",
+    "fasting": "Fasting",
+    "saints": "Saints",
+    "types": "Types",
+    "liturgy": "Liturgy",
+    "conclusion": "Conclusion",
+    "open_menu": "Open navigation menu",
+    "close_menu": "Close menu"
+  },
+  "header": {
+    "search": "Search",
+    "toc": "Contents",
+    "reading_list": "Reading List",
+    "glossary": "Glossary",
+    "scripture_index": "Scripture Index",
+    "faq": "FAQ",
+    "contact": "Contact"
+  },
+  "toc": {
+    "title": "Table of Contents",
+    "reading_time": "~{{min}} min",
+    "total": "Total: ~{{min}} min read"
+  },
+  "search": {
+    "placeholder": "Search the text…",
+    "shortcut": "⌘K",
+    "no_results": "No results for '{{query}}'",
+    "results_count": "{{count}} result",
+    "results_count_plural": "{{count}} results",
+    "type_scripture": "Scripture",
+    "type_father": "Father",
+    "type_body": "Text",
+    "type_note": "Source",
+    "hint": "Press Esc to close"
+  },
+  "section_nav": {
+    "prev": "← {{title}}",
+    "next": "{{title}} →"
+  },
+  "share": {
+    "copy_link": "Copy link",
+    "copied": "Copied!",
+    "share": "Share",
+    "share_on_x": "Share on X"
+  },
+  "theme": {
+    "dark": "Dark mode",
+    "light": "Light mode",
+    "toggle": "Toggle theme"
+  },
+  "lang": {
+    "en": "EN",
+    "ar": "عربي",
+    "toggle": "Switch language"
+  },
+  "pages": {
+    "reading_list": {
+      "title": "Recommended Reading",
+      "subtitle": "Books, documentaries, and resources for deeper study",
+      "books": "Books",
+      "documentaries": "Documentaries & Media",
+      "websites": "Websites & Digital Resources"
+    },
+    "faq": {
+      "title": "Common Questions",
+      "subtitle": "Protestant questions about Coptic Orthodoxy — answered with Scripture and history",
+      "back": "← Back to the full document"
+    },
+    "glossary": {
+      "title": "Coptic Glossary",
+      "subtitle": "Key terms from the Coptic Orthodox tradition",
+      "content_note": "Content in English only",
+      "search_placeholder": "Filter terms…"
+    },
+    "scripture_index": {
+      "title": "Scripture Index",
+      "subtitle": "Biblical references cited throughout the document",
+      "books_label": "Jump to book"
+    },
+    "contact": {
+      "title": "Find a Coptic Church",
+      "subtitle": "Connect with the Coptic Orthodox community near you",
+      "dioceses": "Dioceses & Official Sites",
+      "resources": "Online Resources",
+      "note": "The Coptic Orthodox Church welcomes all who seek the ancient faith. Contact your nearest diocese for information on visiting, inquiring, or joining the community."
+    }
+  },
+  "hero": {
+    "begin": "Begin Reading"
+  },
+  "print": {
+    "button": "Print / Save PDF"
+  },
+  "footer": {
+    "text": "Glory be to God forever. Amen.",
+    "home": "← Return to The Ancient Faith"
+  },
+  "content_english_only": "Section content currently available in English only."
+}
