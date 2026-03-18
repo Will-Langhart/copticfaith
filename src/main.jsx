@@ -6,6 +6,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import i18n from './i18n/index';
 import { router } from './router/routes';
 import './index.css';
+import './App.css';
 import './styles/themes.css';
 import './styles/print.css';
 
