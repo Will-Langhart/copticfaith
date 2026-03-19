@@ -120,6 +120,19 @@
     color: var(--color-gold);
     background: rgba(232, 170, 0, 0.12);
   }
+
+  .header__nav-item--divider {
+    width: 1px;
+    height: 16px;
+    background: var(--color-divider, rgba(255,255,255,0.15));
+    margin: 0 4px;
+    align-self: center;
+    flex-shrink: 0;
+  }
+
+  .header__nav-link--page {
+    opacity: 0.85;
+  }
 }
 
 @media (max-width: 1100px) {

@@ -49,6 +49,13 @@ export default function Header({ visible, sections = [], activeId, onNavigateCli
               </a>
             </li>
           ))}
+          <li className="header__nav-item header__nav-item--divider" aria-hidden="true" />
+          <li className="header__nav-item">
+            <Link to="/baptism" className="header__nav-link header__nav-link--page">Baptism</Link>
+          </li>
+          <li className="header__nav-item">
+            <Link to="/salvation" className="header__nav-link header__nav-link--page">Salvation</Link>
+          </li>
         </ul>
       </nav>
 
@@ -80,8 +87,6 @@ export default function Header({ visible, sections = [], activeId, onNavigateCli
 
         {/* More pages dropdown links */}
         <nav className="header__pages-nav" aria-label="Additional pages">
-          <Link to="/baptism" className="header__page-link">Baptism</Link>
-          <Link to="/salvation" className="header__page-link">Salvation</Link>
           <Link to="/reading-list" className="header__page-link">{t('header.reading_list')}</Link>
           <Link to="/faq" className="header__page-link">{t('header.faq')}</Link>
           <Link to="/glossary" className="header__page-link">{t('header.glossary')}</Link>
