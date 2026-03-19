@@ -4,12 +4,12 @@
   --color-bg-elevated: #f2ede4;
   --color-text: #1a1208;
   --color-text-muted: #5a4d38;
-  --color-gold: #8a6b10;
-  --color-gold-light: #b8900f;
-  --color-gold-dark: #5c4710;
-  --color-blue: #2d5a9e;
-  --color-blue-light: #3d6bbf;
-  --color-divider: rgba(138, 107, 16, 0.35);
+  --color-gold: #b87800;
+  --color-gold-light: #d49800;
+  --color-gold-dark: #8a5a00;
+  --color-blue: #1a1a80;
+  --color-blue-light: #3333b0;
+  --color-divider: rgba(184, 120, 0, 0.35);
   --blur-bg: rgba(250, 247, 242, 0.9);
 }
 
@@ -19,11 +19,11 @@
 }
 
 [data-theme="light"] .scripture-block {
-  background: rgba(138, 107, 16, 0.07);
+  background: rgba(184, 120, 0, 0.07);
 }
 
 [data-theme="light"] .father-quote {
-  background: rgba(45, 90, 158, 0.07);
+  background: rgba(26, 26, 128, 0.07);
 }
 
 [data-theme="light"] .nav-overlay {

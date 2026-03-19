@@ -113,12 +113,12 @@
 
   .header__nav-link:hover {
     color: var(--color-gold);
-    background: rgba(201, 162, 39, 0.1);
+    background: rgba(232, 170, 0, 0.1);
   }
 
   .header__nav-link--active {
     color: var(--color-gold);
-    background: rgba(201, 162, 39, 0.12);
+    background: rgba(232, 170, 0, 0.12);
   }
 }
 
@@ -410,7 +410,7 @@
 
 .hero__tool-btn {
   background: transparent;
-  border: 1px solid rgba(201, 162, 39, 0.4);
+  border: 1px solid rgba(232, 170, 0, 0.4);
   color: var(--color-text-muted);
   font-family: var(--font-body);
   font-size: 0.85rem;
@@ -468,7 +468,7 @@
 
 .header__icon-btn:hover {
   color: var(--color-gold);
-  background: rgba(201, 162, 39, 0.08);
+  background: rgba(232, 170, 0, 0.08);
 }
 
 .lang-toggle {
@@ -505,7 +505,7 @@
 
   .header__page-link:hover {
     color: var(--color-gold);
-    background: rgba(201, 162, 39, 0.08);
+    background: rgba(232, 170, 0, 0.08);
     text-decoration: none;
   }
 }
@@ -745,7 +745,7 @@
 }
 
 .toc-list__item--active {
-  background: rgba(201, 162, 39, 0.08);
+  background: rgba(232, 170, 0, 0.08);
 }
 
 .toc-list__btn {
@@ -763,7 +763,7 @@
 }
 
 .toc-list__btn:hover {
-  background: rgba(201, 162, 39, 0.06);
+  background: rgba(232, 170, 0, 0.06);
 }
 
 .toc-list__num {
@@ -893,7 +893,7 @@
 }
 
 .search-result__btn:hover {
-  background: rgba(201, 162, 39, 0.08);
+  background: rgba(232, 170, 0, 0.08);
 }
 
 .search-result__meta {
@@ -912,8 +912,8 @@
   letter-spacing: 0.04em;
 }
 
-.search-result__badge--scripture { background: rgba(201, 162, 39, 0.15); color: var(--color-gold); }
-.search-result__badge--father    { background: rgba(91, 125, 177, 0.15); color: var(--color-blue-light); }
+.search-result__badge--scripture { background: rgba(232, 170, 0, 0.15); color: var(--color-gold); }
+.search-result__badge--father    { background: rgba(69, 69, 200, 0.15); color: var(--color-blue-light); }
 .search-result__badge--body      { background: rgba(244, 240, 230, 0.1); color: var(--color-text-muted); }
 .search-result__badge--note      { background: rgba(244, 240, 230, 0.1); color: var(--color-text-muted); }
 
@@ -937,7 +937,7 @@
 
 .search-result__heading mark,
 .search-result__text mark {
-  background: rgba(201, 162, 39, 0.25);
+  background: rgba(232, 170, 0, 0.25);
   color: var(--color-gold-light);
   border-radius: 2px;
   padding: 0 1px;
@@ -1022,7 +1022,7 @@
 
   .page-shell__nav-link:hover {
     color: var(--color-gold);
-    background: rgba(201, 162, 39, 0.08);
+    background: rgba(232, 170, 0, 0.08);
     text-decoration: none;
   }
 }
@@ -1196,7 +1196,7 @@
 }
 
 .faq-item__question:hover {
-  background: rgba(201, 162, 39, 0.06);
+  background: rgba(232, 170, 0, 0.06);
 }
 
 .faq-item--open .faq-item__question {
@@ -1272,7 +1272,7 @@
 .glossary-cat-btn--active {
   color: var(--color-gold);
   border-color: var(--color-gold);
-  background: rgba(201, 162, 39, 0.08);
+  background: rgba(232, 170, 0, 0.08);
 }
 
 .glossary-group {
@@ -1321,7 +1321,7 @@
 .glossary-entry__cat {
   font-family: var(--font-body);
   font-size: 0.7rem;
-  background: rgba(201, 162, 39, 0.12);
+  background: rgba(232, 170, 0, 0.12);
   color: var(--color-gold);
   padding: 0.1rem 0.45rem;
   border-radius: 3px;
@@ -1439,7 +1439,7 @@
 .scripture-book-btn--active {
   color: var(--color-gold);
   border-color: var(--color-gold);
-  background: rgba(201, 162, 39, 0.07);
+  background: rgba(232, 170, 0, 0.07);
 }
 
 .scripture-book-group {
