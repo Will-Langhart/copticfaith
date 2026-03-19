@@ -80,6 +80,8 @@ export default function Header({ visible, sections = [], activeId, onNavigateCli
 
         {/* More pages dropdown links */}
         <nav className="header__pages-nav" aria-label="Additional pages">
+          <Link to="/baptism" className="header__page-link">Baptism</Link>
+          <Link to="/salvation" className="header__page-link">Salvation</Link>
           <Link to="/reading-list" className="header__page-link">{t('header.reading_list')}</Link>
           <Link to="/faq" className="header__page-link">{t('header.faq')}</Link>
           <Link to="/glossary" className="header__page-link">{t('header.glossary')}</Link>

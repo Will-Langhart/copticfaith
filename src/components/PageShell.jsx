@@ -17,6 +17,8 @@ export default function PageShell({ children, title }) {
         </Link>
 
         <nav className="page-shell__nav" aria-label="Site navigation">
+          <Link to="/baptism" className="page-shell__nav-link">Baptism</Link>
+          <Link to="/salvation" className="page-shell__nav-link">Salvation</Link>
           <Link to="/reading-list" className="page-shell__nav-link">{t('header.reading_list')}</Link>
           <Link to="/faq" className="page-shell__nav-link">{t('header.faq')}</Link>
           <Link to="/glossary" className="page-shell__nav-link">{t('header.glossary')}</Link>

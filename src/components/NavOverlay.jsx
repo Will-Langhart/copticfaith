@@ -34,6 +34,8 @@ export default function NavOverlay({ isOpen, sections, activeId, onClose, onSele
       </nav>
 
       <div className="nav-overlay__pages">
+        <Link to="/baptism" onClick={onClose} className="nav-overlay__page-link">Baptism</Link>
+        <Link to="/salvation" onClick={onClose} className="nav-overlay__page-link">Salvation</Link>
         <Link to="/reading-list" onClick={onClose} className="nav-overlay__page-link">{t('header.reading_list')}</Link>
         <Link to="/faq" onClick={onClose} className="nav-overlay__page-link">{t('header.faq')}</Link>
         <Link to="/glossary" onClick={onClose} className="nav-overlay__page-link">{t('header.glossary')}</Link>
