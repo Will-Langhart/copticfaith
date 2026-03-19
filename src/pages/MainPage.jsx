@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import NavOverlay from '../components/NavOverlay';
 import SideDots from '../components/SideDots';
@@ -175,6 +175,40 @@ export default function MainPage() {
           <button className="hero__tool-btn" onClick={() => window.print()} title={t('print.button')}>
             🖨 {t('print.button')}
           </button>
+        </div>
+      </section>
+
+      {/* Deep-dive topic cards */}
+      <section className="deep-dives" aria-label="In-depth topic pages">
+        <h2 className="deep-dives__heading">Deep Dives</h2>
+        <p className="deep-dives__intro">
+          Explore the distinctive Coptic Orthodox teachings on these foundational doctrines —
+          examined in full theological depth, with Scripture, Patristic witnesses, and honest
+          comparison to Protestant positions.
+        </p>
+        <div className="deep-dives__grid">
+          <Link to="/baptism" className="deep-dive-card">
+            <span className="deep-dive-card__icon" aria-hidden>✦</span>
+            <h3 className="deep-dive-card__title">Holy Baptism</h3>
+            <p className="deep-dive-card__body">
+              Why the Coptic Church baptizes infants, what triple immersion accomplishes, and how
+              this sacrament differs fundamentally from a Protestant ordinance or public declaration.
+              Grounded in John 3:5, Romans 6, Titus 3:5, and the witness of Origen, Chrysostom,
+              and Cyril of Jerusalem.
+            </p>
+            <span className="deep-dive-card__cta">Read →</span>
+          </Link>
+          <Link to="/salvation" className="deep-dive-card">
+            <span className="deep-dive-card__icon" aria-hidden>✦</span>
+            <h3 className="deep-dive-card__title">Salvation &amp; Theosis</h3>
+            <p className="deep-dive-card__body">
+              How the Coptic Church understands salvation as an ongoing journey of deification
+              (<em>theosis</em>) — not a one-time forensic declaration. Addresses sola fide,
+              once-saved-always-saved, and the role of the sacraments. Grounded in Athanasius,
+              Cyril of Alexandria, Pope Shenouda III, and 2 Peter 1:4.
+            </p>
+            <span className="deep-dive-card__cta">Read →</span>
+          </Link>
         </div>
       </section>
 

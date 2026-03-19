@@ -1514,3 +1514,85 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* ── Deep-dives section (MainPage) ──────────────────────────────────────── */
+.deep-dives {
+  max-width: var(--content-max-width, 780px);
+  margin: 0 auto clamp(3rem, 6vw, 6rem);
+  padding: 0 clamp(1.25rem, 5vw, 2.5rem);
+  text-align: center;
+}
+
+.deep-dives__heading {
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: var(--color-gold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.6em;
+}
+
+.deep-dives__intro {
+  font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+  color: var(--color-text-muted, var(--color-text));
+  opacity: 0.8;
+  margin-bottom: 2rem;
+  line-height: 1.65;
+}
+
+.deep-dives__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 1.75rem);
+}
+
+.deep-dive-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--color-gold);
+  border-radius: 4px;
+  background: var(--color-surface, transparent);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+  text-align: left;
+}
+
+.deep-dive-card:hover,
+.deep-dive-card:focus-visible {
+  background: color-mix(in srgb, var(--color-gold) 8%, transparent);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--color-gold) 20%, transparent);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.deep-dive-card__icon {
+  font-size: 1.2rem;
+  color: var(--color-gold);
+}
+
+.deep-dive-card__title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+  color: var(--color-gold);
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+
+.deep-dive-card__body {
+  font-size: clamp(0.85rem, 1.6vw, 0.95rem);
+  line-height: 1.65;
+  opacity: 0.85;
+  margin: 0;
+  flex: 1;
+}
+
+.deep-dive-card__cta {
+  font-size: 0.85rem;
+  color: var(--color-gold);
+  font-family: var(--font-serif);
+  letter-spacing: 0.06em;
+  margin-top: auto;
+}
