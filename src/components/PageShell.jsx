@@ -17,7 +17,15 @@ export default function PageShell({ children, title }) {
         </Link>
 
         <nav className="page-shell__nav" aria-label="Site navigation">
+          <Link to="/sacraments" className="page-shell__nav-link page-shell__nav-link--highlight">The Seven Mysteries</Link>
+          <span className="page-shell__nav-divider" aria-hidden="true" />
           <Link to="/baptism" className="page-shell__nav-link">Baptism</Link>
+          <Link to="/chrismation" className="page-shell__nav-link">Chrismation</Link>
+          <Link to="/confession" className="page-shell__nav-link">Confession</Link>
+          <Link to="/unction" className="page-shell__nav-link">Unction</Link>
+          <Link to="/matrimony" className="page-shell__nav-link">Matrimony</Link>
+          <Link to="/holy-orders" className="page-shell__nav-link">Holy Orders</Link>
+          <span className="page-shell__nav-divider" aria-hidden="true" />
           <Link to="/salvation" className="page-shell__nav-link">Salvation</Link>
           <Link to="/reading-list" className="page-shell__nav-link">{t('header.reading_list')}</Link>
           <Link to="/faq" className="page-shell__nav-link">{t('header.faq')}</Link>

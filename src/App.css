@@ -1609,3 +1609,283 @@
   letter-spacing: 0.06em;
   margin-top: auto;
 }
+
+/* ─── HEADER DROPDOWN (Seven Mysteries) ─── */
+.header__dropdown-wrapper {
+  position: relative;
+}
+
+.header__nav-link--sacraments {
+  color: var(--color-gold) !important;
+  opacity: 1 !important;
+}
+
+.header__dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 210px;
+  background: var(--color-bg, #0e0e0e);
+  border: 1px solid var(--color-gold);
+  border-radius: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem 0;
+  z-index: 300;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.header__dropdown-wrapper:hover .header__dropdown,
+.header__dropdown-wrapper:focus-within .header__dropdown {
+  display: block;
+}
+
+.header__dropdown li {
+  margin: 0;
+}
+
+.header__dropdown-link {
+  display: block;
+  padding: 0.45rem 1rem;
+  font-size: 0.78rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s, background 0.15s;
+}
+
+.header__dropdown-link:hover {
+  color: var(--color-gold);
+  background: rgba(232, 170, 0, 0.1);
+}
+
+/* ─── PAGE SHELL NAV DIVIDER ─── */
+.page-shell__nav-divider {
+  display: inline-block;
+  width: 1px;
+  height: 14px;
+  background: var(--color-divider, rgba(255,255,255,0.15));
+  vertical-align: middle;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.page-shell__nav-link--highlight {
+  color: var(--color-gold) !important;
+  font-weight: 600;
+}
+
+/* ─── NAV OVERLAY SECTION LABELS ─── */
+.nav-overlay__section-label {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  opacity: 0.7;
+  margin: 1.2rem 0 0.4rem;
+  text-align: center;
+}
+
+.nav-overlay__page-link--highlight {
+  color: var(--color-gold) !important;
+  font-weight: 600;
+}
+
+/* ─── SACRAMENTS OVERVIEW PAGE ─── */
+.sacraments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin: 2rem 0;
+}
+
+.sacrament-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid rgba(232, 170, 0, 0.35);
+  border-radius: 6px;
+  background: var(--color-surface, transparent);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.sacrament-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: 0 4px 20px rgba(232, 170, 0, 0.15);
+}
+
+.sacrament-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.sacrament-card__number {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  color: var(--color-gold);
+  opacity: 0.55;
+  min-width: 1.5rem;
+}
+
+.sacrament-card__icon {
+  font-size: 1.4rem;
+}
+
+.sacrament-card__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: var(--color-gold);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.sacrament-card__arabic {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0.1rem 0 0;
+  font-style: italic;
+}
+
+.sacrament-card__tagline {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin: 0;
+}
+
+.sacrament-card__verse {
+  background: rgba(232, 170, 0, 0.06);
+  border-left: 3px solid var(--color-gold);
+  padding: 0.6rem 0.85rem;
+  border-radius: 0 4px 4px 0;
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.sacrament-card__summary {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.sacrament-card__distinctions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.25rem;
+}
+
+.sacrament-card__distinction {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+}
+
+.sacrament-card__distinction--coptic {
+  background: rgba(232, 170, 0, 0.07);
+  border-left: 2px solid var(--color-gold);
+}
+
+.sacrament-card__distinction--protestant {
+  background: rgba(255,255,255,0.03);
+  border-left: 2px solid rgba(255,255,255,0.15);
+}
+
+.sacrament-card__link {
+  display: inline-block;
+  margin-top: auto;
+  padding: 0.5rem 0;
+  font-size: 0.82rem;
+  font-family: var(--font-heading);
+  color: var(--color-gold);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: opacity 0.2s;
+}
+
+.sacrament-card__link:hover {
+  opacity: 0.75;
+}
+
+/* ─── COMPARISON TABLE (Holy Orders, Unction, Matrimony) ─── */
+.mystery-comparison-table {
+  overflow-x: auto;
+  margin: 1.25rem 0;
+}
+
+.mystery-comparison-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.mystery-comparison-table th {
+  background: rgba(232, 170, 0, 0.1);
+  color: var(--color-gold);
+  text-align: left;
+  padding: 0.65rem 0.85rem;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--color-gold);
+}
+
+.mystery-comparison-table td {
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  vertical-align: top;
+  color: var(--color-text);
+}
+
+.mystery-comparison-table tr:last-child td {
+  border-bottom: none;
+}
+
+.mystery-comparison-table tr:hover td {
+  background: rgba(232, 170, 0, 0.04);
+}
+
+/* ─── NAV OVERLAY PAGES (enhanced layout) ─── */
+.nav-overlay__pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-divider, rgba(255,255,255,0.1));
+  width: 100%;
+  max-width: 400px;
+}
+
+.nav-overlay__page-link {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+.nav-overlay__page-link:hover {
+  color: var(--color-gold);
+}
+
+/* Light theme overrides for dropdown */
+:root[data-theme='light'] .header__dropdown,
+.light-theme .header__dropdown {
+  background: var(--color-bg, #faf8f3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}

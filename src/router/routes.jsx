@@ -9,6 +9,12 @@ const ContactPage      = lazy(() => import('../pages/ContactPage'));
 const ScriptureIndexPage = lazy(() => import('../pages/ScriptureIndexPage'));
 const BaptismPage      = lazy(() => import('../pages/BaptismPage'));
 const SalvationPage    = lazy(() => import('../pages/SalvationPage'));
+const SacramentsPage   = lazy(() => import('../pages/SacramentsPage'));
+const ChrismationPage  = lazy(() => import('../pages/ChrismationPage'));
+const ConfessionPage   = lazy(() => import('../pages/ConfessionPage'));
+const HolyOrdersPage   = lazy(() => import('../pages/HolyOrdersPage'));
+const MatrimonyPage    = lazy(() => import('../pages/MatrimonyPage'));
+const UnctionPage      = lazy(() => import('../pages/UnctionPage'));
 
 function PageLoader() {
   return (
@@ -35,4 +41,10 @@ export const router = createBrowserRouter([
   { path: '/scripture-index', element: withSuspense(ScriptureIndexPage) },
   { path: '/baptism',        element: withSuspense(BaptismPage)         },
   { path: '/salvation',      element: withSuspense(SalvationPage)       },
+  { path: '/sacraments',     element: withSuspense(SacramentsPage)      },
+  { path: '/chrismation',    element: withSuspense(ChrismationPage)     },
+  { path: '/confession',     element: withSuspense(ConfessionPage)      },
+  { path: '/holy-orders',    element: withSuspense(HolyOrdersPage)      },
+  { path: '/matrimony',      element: withSuspense(MatrimonyPage)       },
+  { path: '/unction',        element: withSuspense(UnctionPage)         },
 ]);

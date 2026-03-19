@@ -50,9 +50,21 @@ export default function Header({ visible, sections = [], activeId, onNavigateCli
             </li>
           ))}
           <li className="header__nav-item header__nav-item--divider" aria-hidden="true" />
-          <li className="header__nav-item">
-            <Link to="/baptism" className="header__nav-link header__nav-link--page">Baptism</Link>
+          <li className="header__nav-item header__dropdown-wrapper">
+            <Link to="/sacraments" className="header__nav-link header__nav-link--page header__nav-link--sacraments">
+              The Seven Mysteries ▾
+            </Link>
+            <ul className="header__dropdown" role="menu">
+              <li><Link to="/baptism" className="header__dropdown-link">I. Baptism</Link></li>
+              <li><Link to="/chrismation" className="header__dropdown-link">II. Chrismation</Link></li>
+              <li><Link to="/confession" className="header__dropdown-link">III. Confession</Link></li>
+              <li><Link to="/#section5" className="header__dropdown-link">IV. Eucharist</Link></li>
+              <li><Link to="/unction" className="header__dropdown-link">V. Unction of the Sick</Link></li>
+              <li><Link to="/matrimony" className="header__dropdown-link">VI. Matrimony</Link></li>
+              <li><Link to="/holy-orders" className="header__dropdown-link">VII. Holy Orders</Link></li>
+            </ul>
           </li>
+          <li className="header__nav-item header__nav-item--divider" aria-hidden="true" />
           <li className="header__nav-item">
             <Link to="/salvation" className="header__nav-link header__nav-link--page">Salvation</Link>
           </li>
