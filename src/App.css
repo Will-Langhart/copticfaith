@@ -1697,6 +1697,23 @@
   font-weight: 600;
 }
 
+/* ─── THE FATHERS NAV LINKS ─── */
+.header__nav-link--fathers {
+  color: var(--color-gold) !important;
+  opacity: 0.9;
+}
+
+.page-shell__nav-link--fathers {
+  color: var(--color-gold) !important;
+  opacity: 0.9;
+}
+
+.nav-overlay__page-link--fathers {
+  color: var(--color-gold) !important;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
 /* ─── SACRAMENTS OVERVIEW PAGE ─── */
 .sacraments-grid {
   display: grid;
