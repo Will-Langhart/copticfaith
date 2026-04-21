@@ -1,0 +1,207 @@
+/* ═══════════════════════════════════════════════════════════
+   ChurchHistoryPage.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Page wrapper ─────────────────────────────────────────── */
+.church-history {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 8vw, 5rem);
+}
+
+/* ── Intro paragraph ──────────────────────────────────────── */
+.church-history__intro {
+  max-width: 760px;
+  margin: 0 auto clamp(2.5rem, 6vw, 4rem);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: clamp(0.95rem, 2vw, 1.05rem);
+  line-height: 1.8;
+}
+
+/* ── Timeline section ─────────────────────────────────────── */
+.church-history__timeline-section {
+  margin-bottom: clamp(3rem, 7vw, 5rem);
+}
+
+.church-history__section-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.15rem, 2.8vw, 1.5rem);
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+  text-align: center;
+  margin: 0 0 1.5rem;
+  font-weight: 500;
+}
+
+/* SVG wrapper — scrollable on small screens */
+.cht__svg-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--color-bg-elevated);
+  border-radius: 12px;
+  padding: 1.25rem 0.75rem 0.5rem;
+  border: 1px solid rgba(232, 170, 0, 0.1);
+}
+
+.cht__svg {
+  width: 100%;
+  min-width: 540px;
+  max-width: 900px;
+  display: block;
+  margin: 0 auto;
+  height: auto;
+}
+
+/* ── Legend ───────────────────────────────────────────────── */
+.ch-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 1.4rem;
+  justify-content: center;
+  margin-top: 1.25rem;
+  padding: 0.75rem 1rem;
+}
+
+.ch-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ch-legend__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ch-legend__label {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* ── Events container ─────────────────────────────────────── */
+.church-history__events {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 5vw, 3.5rem);
+}
+
+/* ── Section block ────────────────────────────────────────── */
+.ch-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.ch-section__header {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 0.4rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-divider);
+  opacity: 0.65;
+}
+
+/* ── Event card ───────────────────────────────────────────── */
+.ch-event {
+  display: grid;
+  grid-template-columns: clamp(3.2rem, 7vw, 4.5rem) 1fr;
+  gap: 0 clamp(0.9rem, 2.5vw, 1.6rem);
+  background: var(--color-bg-elevated);
+  border-left: 3px solid var(--color-gold); /* overridden inline */
+  border-radius: 0 8px 8px 0;
+  padding: clamp(0.7rem, 2vw, 1.1rem) clamp(0.9rem, 2.5vw, 1.4rem);
+  transition: background 0.18s ease;
+}
+
+.ch-event:hover {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.ch-event__year {
+  font-size: clamp(0.78rem, 1.7vw, 0.88rem);
+  color: var(--color-text-muted);
+  padding-top: 0.2rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  opacity: 0.8;
+}
+
+.ch-event__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.ch-event__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2.4vw, 1.22rem);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  line-height: 1.3;
+}
+
+.ch-event__tag {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 500;
+  padding: 0.15em 0.6em;
+  border-radius: 20px;
+  border: 1px solid transparent; /* color set inline */
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  line-height: 1.6;
+}
+
+.ch-event__body {
+  font-size: clamp(0.87rem, 1.85vw, 0.97rem);
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.78;
+}
+
+/* ── Light theme adjustments ──────────────────────────────── */
+[data-theme="light"] .cht__svg-wrapper {
+  background: var(--color-bg-elevated);
+  border-color: rgba(184, 120, 0, 0.12);
+}
+
+[data-theme="light"] .ch-event {
+  background: var(--color-bg-elevated);
+}
+
+[data-theme="light"] .ch-event:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* ── Mobile layout ────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .ch-event {
+    grid-template-columns: 1fr;
+    gap: 0.2rem 0;
+  }
+
+  .ch-event__year {
+    font-size: 0.74rem;
+    padding-top: 0;
+    opacity: 0.6;
+  }
+
+  .ch-legend__label {
+    font-size: 0.73rem;
+  }
+}

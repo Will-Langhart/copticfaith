@@ -70,6 +70,10 @@ export default function Header({ visible, sections = [], activeId, onNavigateCli
           </li>
           <li className="header__nav-item header__nav-item--divider" aria-hidden="true" />
           <li className="header__nav-item">
+            <Link to="/church-history" className="header__nav-link header__nav-link--page">Church History</Link>
+          </li>
+          <li className="header__nav-item header__nav-item--divider" aria-hidden="true" />
+          <li className="header__nav-item">
             <Link to="/fathers" className="header__nav-link header__nav-link--page header__nav-link--fathers">The Fathers</Link>
           </li>
         </ul>

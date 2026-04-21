@@ -27,6 +27,7 @@ export default function PageShell({ children, title }) {
           <Link to="/holy-orders" className="page-shell__nav-link">Holy Orders</Link>
           <span className="page-shell__nav-divider" aria-hidden="true" />
           <Link to="/salvation" className="page-shell__nav-link">Salvation</Link>
+          <Link to="/church-history" className="page-shell__nav-link">Church History</Link>
           <Link to="/fathers" className="page-shell__nav-link page-shell__nav-link--fathers">The Fathers</Link>
           <Link to="/reading-list" className="page-shell__nav-link">{t('header.reading_list')}</Link>
           <Link to="/faq" className="page-shell__nav-link">{t('header.faq')}</Link>
