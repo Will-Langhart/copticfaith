@@ -46,6 +46,7 @@ export default function NavOverlay({ isOpen, sections, activeId, onClose, onSele
         <Link to="/salvation" onClick={onClose} className="nav-overlay__page-link">Salvation</Link>
         <Link to="/church-history" onClick={onClose} className="nav-overlay__page-link">Church History</Link>
         <Link to="/fathers" onClick={onClose} className="nav-overlay__page-link nav-overlay__page-link--fathers">The Fathers</Link>
+        <Link to="/books" onClick={onClose} className="nav-overlay__page-link">Books (Popular Patristics)</Link>
         <Link to="/reading-list" onClick={onClose} className="nav-overlay__page-link">{t('header.reading_list')}</Link>
         <Link to="/faq" onClick={onClose} className="nav-overlay__page-link">{t('header.faq')}</Link>
         <Link to="/glossary" onClick={onClose} className="nav-overlay__page-link">{t('header.glossary')}</Link>

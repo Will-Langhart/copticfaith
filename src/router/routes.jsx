@@ -17,6 +17,7 @@ const MatrimonyPage    = lazy(() => import('../pages/MatrimonyPage'));
 const UnctionPage      = lazy(() => import('../pages/UnctionPage'));
 const FathersPage      = lazy(() => import('../pages/FathersPage'));
 const ChurchHistoryPage = lazy(() => import('../pages/ChurchHistoryPage'));
+const BooksPage        = lazy(() => import('../pages/BooksPage'));
 
 function PageLoader() {
   return (
@@ -51,4 +52,5 @@ export const router = createBrowserRouter([
   { path: '/unction',        element: withSuspense(UnctionPage)         },
   { path: '/fathers',         element: withSuspense(FathersPage)          },
   { path: '/church-history', element: withSuspense(ChurchHistoryPage)   },
+  { path: '/books',          element: withSuspense(BooksPage)           },
 ]);
