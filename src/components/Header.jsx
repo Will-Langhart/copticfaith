@@ -58,7 +58,7 @@ export default function Header({ visible, sections = [], activeId, onNavigateCli
               <li><Link to="/baptism" className="header__dropdown-link">I. Baptism</Link></li>
               <li><Link to="/chrismation" className="header__dropdown-link">II. Chrismation</Link></li>
               <li><Link to="/confession" className="header__dropdown-link">III. Confession</Link></li>
-              <li><Link to="/#section5" className="header__dropdown-link">IV. Eucharist</Link></li>
+              <li><Link to="/eucharist" className="header__dropdown-link">IV. Eucharist</Link></li>
               <li><Link to="/unction" className="header__dropdown-link">V. Unction of the Sick</Link></li>
               <li><Link to="/matrimony" className="header__dropdown-link">VI. Matrimony</Link></li>
               <li><Link to="/holy-orders" className="header__dropdown-link">VII. Holy Orders</Link></li>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a2332"/>
+      <stop offset="50%" style="stop-color:#0f1623"/>
+      <stop offset="100%" style="stop-color:#0a0e17"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" style="stop-color:rgba(201,162,39,0.08)"/>
+      <stop offset="60%" style="stop-color:transparent"/>
+      <stop offset="100%" style="stop-color:rgba(201,162,39,0.03)"/>
+    </linearGradient>
+    <pattern id="cross" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M60 20v80M20 60h80" stroke="rgba(201,162,39,0.06)" stroke-width="1" fill="none"/>
+      <circle cx="60" cy="60" r="3" fill="rgba(201,162,39,0.07)"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#sky)"/>
+  <rect width="100%" height="100%" fill="url(#cross)"/>
+  <rect width="100%" height="100%" fill="url(#glow)"/>
+</svg>

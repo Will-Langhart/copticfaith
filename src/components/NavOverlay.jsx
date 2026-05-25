@@ -39,6 +39,7 @@ export default function NavOverlay({ isOpen, sections, activeId, onClose, onSele
         <Link to="/baptism" onClick={onClose} className="nav-overlay__page-link">I. Holy Baptism</Link>
         <Link to="/chrismation" onClick={onClose} className="nav-overlay__page-link">II. Chrismation (Myron)</Link>
         <Link to="/confession" onClick={onClose} className="nav-overlay__page-link">III. Repentance &amp; Confession</Link>
+        <Link to="/eucharist" onClick={onClose} className="nav-overlay__page-link">IV. Holy Eucharist</Link>
         <Link to="/unction" onClick={onClose} className="nav-overlay__page-link">V. Unction of the Sick</Link>
         <Link to="/matrimony" onClick={onClose} className="nav-overlay__page-link">VI. Holy Matrimony</Link>
         <Link to="/holy-orders" onClick={onClose} className="nav-overlay__page-link">VII. Holy Orders</Link>

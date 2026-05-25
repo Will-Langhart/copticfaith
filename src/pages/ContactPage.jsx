@@ -113,7 +113,14 @@ export default function ContactPage() {
                 <div className="diocese-card__region">{d.region}</div>
                 <div className="diocese-card__name">{d.name}</div>
                 <p className="diocese-card__desc">{d.description}</p>
-                <span className="diocese-card__url">{d.url}</span>
+                <a
+                  href={`https://${d.url}`}
+                  className="diocese-card__url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {d.url}
+                </a>
               </div>
             ))}
           </div>
@@ -135,7 +142,14 @@ export default function ContactPage() {
               <div key={r.name} className="diocese-card">
                 <div className="diocese-card__name">{r.name}</div>
                 <p className="diocese-card__desc">{r.description}</p>
-                <span className="diocese-card__url">{r.url}</span>
+                <a
+                  href={`https://${r.url}`}
+                  className="diocese-card__url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {r.url}
+                </a>
               </div>
             ))}
           </div>
