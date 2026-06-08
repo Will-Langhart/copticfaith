@@ -27,6 +27,7 @@ export default function PageShell({ children, title }) {
           <Link to="/matrimony" className="page-shell__nav-link">Matrimony</Link>
           <Link to="/holy-orders" className="page-shell__nav-link">Holy Orders</Link>
           <span className="page-shell__nav-divider" aria-hidden="true" />
+          <Link to="/saints-calendar" className="page-shell__nav-link">Saints</Link>
           <Link to="/salvation" className="page-shell__nav-link">Salvation</Link>
           <Link to="/church-history" className="page-shell__nav-link">Church History</Link>
           <Link to="/fathers" className="page-shell__nav-link page-shell__nav-link--fathers">The Fathers</Link>

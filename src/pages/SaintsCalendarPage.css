@@ -1,0 +1,619 @@
+/* ── Saints Calendar Page ────────────────────────────────── */
+.sc {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem clamp(1rem, 4vw, 2.5rem) 4rem;
+}
+
+/* ── Today Banner ─────────────────────────────────────────── */
+.sc-today {
+  background: linear-gradient(135deg, var(--color-gold) 0%, #b8782a 100%);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  color: #1a1408;
+}
+
+.sc-today__inner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.sc-today__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.sc-today__date {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.sc-today__feasts {
+  font-size: 0.9rem;
+  font-weight: 500;
+  flex: 1;
+  min-width: 200px;
+}
+
+.sc-today__feasts--none {
+  opacity: 0.65;
+  font-style: italic;
+}
+
+.sc-today__jump {
+  background: rgba(0,0,0,0.15);
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a1408;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.sc-today__jump:hover {
+  background: rgba(0,0,0,0.25);
+}
+
+/* ── View Tabs ────────────────────────────────────────────── */
+.sc-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--color-border, #2a2a3a);
+  padding-bottom: 0;
+}
+
+.sc-tabs__btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-muted, #888);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  margin-bottom: -1px;
+}
+
+.sc-tabs__btn:hover {
+  color: var(--color-text);
+}
+
+.sc-tabs__btn--active {
+  color: var(--color-gold);
+  border-bottom-color: var(--color-gold);
+  font-weight: 600;
+}
+
+/* ── Month Selector ───────────────────────────────────────── */
+.sc-months {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.sc-months__btn {
+  background: var(--color-surface, #16161e);
+  border: 1px solid var(--color-border, #2a2a3a);
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.sc-months__btn:hover {
+  border-color: var(--color-gold);
+}
+
+.sc-months__btn--active {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+}
+
+.sc-months__btn--active .sc-months__name,
+.sc-months__btn--active .sc-months__arabic,
+.sc-months__btn--active .sc-months__count {
+  color: #1a1408;
+}
+
+.sc-months__name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.sc-months__arabic {
+  font-size: 0.8rem;
+  color: var(--color-text-muted, #888);
+  direction: rtl;
+}
+
+.sc-months__count {
+  font-size: 0.7rem;
+  color: var(--color-gold);
+  font-weight: 500;
+}
+
+.sc-months__btn--active .sc-months__count {
+  color: rgba(26,20,8,0.7);
+}
+
+/* ── Calendar Layout ──────────────────────────────────────── */
+.sc-main {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .sc-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Month Header ─────────────────────────────────────────── */
+.sc-month-header {
+  margin-bottom: 1.25rem;
+}
+
+.sc-month-header__name {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 0.25rem;
+}
+
+.sc-month-header__arabic {
+  font-size: 1.1rem;
+  color: var(--color-gold);
+  font-family: serif;
+  font-weight: 400;
+  direction: rtl;
+}
+
+.sc-month-header__greg {
+  font-size: 0.8rem;
+  color: var(--color-text-muted, #888);
+  margin: 0;
+}
+
+/* ── Day Picker ───────────────────────────────────────────── */
+.sc-days {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.35rem;
+}
+
+.sc-days__btn {
+  position: relative;
+  background: var(--color-surface, #16161e);
+  border: 1px solid var(--color-border, #2a2a3a);
+  border-radius: 6px;
+  padding: 0.4rem 0.2rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted, #888);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sc-days__btn:hover {
+  border-color: var(--color-gold);
+  color: var(--color-text);
+}
+
+.sc-days__btn--active {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: #1a1408;
+  font-weight: 700;
+}
+
+.sc-days__btn--has-saint {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.sc-days__dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  flex-shrink: 0;
+}
+
+.sc-days__btn--active .sc-days__dot {
+  background: #1a1408;
+}
+
+/* ── Day Header ───────────────────────────────────────────── */
+.sc-day-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.sc-day-header__title {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.sc-day-header__count {
+  font-size: 0.8rem;
+  color: var(--color-text-muted, #888);
+}
+
+/* ── Saint List ───────────────────────────────────────────── */
+.sc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.sc-empty {
+  font-size: 0.9rem;
+  color: var(--color-text-muted, #888);
+  line-height: 1.7;
+  padding: 1.5rem;
+  background: var(--color-surface, #16161e);
+  border-radius: 8px;
+  border: 1px solid var(--color-border, #2a2a3a);
+  font-style: italic;
+}
+
+/* ── Saint Card ───────────────────────────────────────────── */
+.sc-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  background: var(--color-surface, #16161e);
+  border: 1px solid var(--color-border, #2a2a3a);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.sc-card:hover {
+  border-color: var(--saint-color, var(--color-gold));
+}
+
+.sc-card--open {
+  border-color: var(--saint-color, var(--color-gold));
+  background: color-mix(in srgb, var(--saint-color, var(--color-gold)) 6%, var(--color-surface, #16161e));
+}
+
+.sc-card__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--saint-color, var(--color-gold));
+  flex-shrink: 0;
+}
+
+.sc-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.sc-card__name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.sc-card__subtitle {
+  font-size: 0.8rem;
+  color: var(--color-text-muted, #888);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sc-card__badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.sc-card__arrow {
+  color: var(--color-text-muted, #888);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.sc-card--open .sc-card__arrow {
+  transform: rotate(90deg);
+}
+
+/* ── Saint Detail Panel ───────────────────────────────────── */
+.sc-detail {
+  position: relative;
+  background: var(--color-surface, #16161e);
+  border: 1px solid var(--color-border, #2a2a3a);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.sc-detail__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--color-text-muted, #888);
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 0;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+.sc-detail__close:hover {
+  color: var(--color-text);
+}
+
+.sc-detail__header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+}
+
+.sc-detail__icon {
+  font-size: 1.5rem;
+  color: var(--saint-color, var(--color-gold));
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.sc-detail__name {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.2rem;
+}
+
+.sc-detail__subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-muted, #888);
+  margin: 0 0 0.6rem;
+}
+
+.sc-detail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sc-detail__badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.sc-detail__died,
+.sc-detail__feast {
+  font-size: 0.78rem;
+  color: var(--color-text-muted, #888);
+}
+
+.sc-detail__bio {
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--color-text);
+  margin: 0 0 1rem;
+}
+
+.sc-detail__quote {
+  border-left: 3px solid var(--saint-color, var(--color-gold));
+  padding-left: 1rem;
+  margin: 0;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--color-text-muted, #888);
+  line-height: 1.65;
+}
+
+/* ── All Saints View ──────────────────────────────────────── */
+.sc-all {
+  /* nothing extra needed */
+}
+
+.sc-search-wrap {
+  margin-bottom: 1.25rem;
+}
+
+.sc-search {
+  width: 100%;
+  max-width: 480px;
+  background: var(--color-surface, #16161e);
+  border: 1px solid var(--color-border, #2a2a3a);
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.sc-search:focus {
+  border-color: var(--color-gold);
+}
+
+.sc-all__count {
+  font-size: 0.8rem;
+  color: var(--color-text-muted, #888);
+  margin-bottom: 1.25rem;
+}
+
+.sc-all-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.75rem;
+}
+
+.sc-all-card {
+  background: var(--color-surface, #16161e);
+  border: 1px solid var(--color-border, #2a2a3a);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.sc-all-card:hover {
+  border-color: var(--saint-color);
+}
+
+.sc-all-card--open {
+  border-color: var(--saint-color);
+  background: color-mix(in srgb, var(--saint-color) 6%, var(--color-surface, #16161e));
+}
+
+.sc-all-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+}
+
+.sc-all-card__feast-day {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  letter-spacing: 0.04em;
+}
+
+.sc-all-card__badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.sc-all-card__name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.sc-all-card__subtitle {
+  font-size: 0.78rem;
+  color: var(--color-text-muted, #888);
+}
+
+.sc-all-card__detail {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border, #2a2a3a);
+}
+
+.sc-all-card__bio {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--color-text);
+  margin: 0 0 0.75rem;
+}
+
+.sc-all-card__quote {
+  border-left: 3px solid var(--saint-color);
+  padding-left: 0.75rem;
+  margin: 0;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--color-text-muted, #888);
+  line-height: 1.6;
+}
+
+/* ── About Section ────────────────────────────────────────── */
+.sc-about {
+  margin-top: 4rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--color-border, #2a2a3a);
+}
+
+.sc-about__title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 1.5rem;
+}
+
+.sc-about__cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.sc-about__col h3 {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  margin: 0 0 0.6rem;
+}
+
+.sc-about__col p {
+  font-size: 0.875rem;
+  line-height: 1.8;
+  color: var(--color-text-muted, #888);
+  margin: 0;
+}
+
+.sc-about__col em {
+  font-style: italic;
+  color: var(--color-text);
+}
