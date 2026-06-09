@@ -231,7 +231,7 @@ export default function AskAFather() {
         aria-label={open ? 'Close Ask a Church Father' : 'Ask a Church Father'}
         aria-expanded={open}
       >
-        <span className="acf-trigger__icon" aria-hidden="true">☩</span>
+        <img src="/logo.png" alt="" className="acf-trigger__icon" aria-hidden="true" />
         <span className="acf-trigger__label">Ask a Father</span>
         {hasUnread && <span className="acf-trigger__unread-dot" aria-hidden="true" />}
       </button>
@@ -255,7 +255,7 @@ export default function AskAFather() {
         {/* Header */}
         <div className="acf-header">
           <div className="acf-header__left">
-            <span className="acf-header__cross" aria-hidden="true">☩</span>
+            <img src="/logo.png" alt="" className="acf-header__cross" aria-hidden="true" />
             <div>
               <h2 className="acf-header__title">Ask a Church Father</h2>
               <p className="acf-header__subtitle">Grounded in Scripture &amp; the Fathers</p>

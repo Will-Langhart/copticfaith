@@ -35,8 +35,10 @@
 }
 
 .acf-trigger__icon {
-  font-size: 1rem;
-  line-height: 1;
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .acf-trigger__label {
@@ -137,9 +139,9 @@
 }
 
 .acf-header__cross {
-  font-size: 1.5rem;
-  color: var(--color-gold);
-  line-height: 1;
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
   flex-shrink: 0;
 }
 
