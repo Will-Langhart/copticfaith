@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
+import AskAFather from './AskAFather';
 
 export default function PageShell({ children, title }) {
   const { t } = useTranslation();
@@ -59,6 +60,8 @@ export default function PageShell({ children, title }) {
         <p>{t('footer.text')}</p>
         <Link to="/">{t('footer.home')}</Link>
       </footer>
+
+      <AskAFather />
     </div>
   );
 }
