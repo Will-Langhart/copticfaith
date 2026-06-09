@@ -632,3 +632,22 @@
     height: 70px;
   }
 }
+
+.father-detail__profile-link {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 1.75rem;
+  padding: 0.6rem 1.25rem;
+  background: var(--color-gold);
+  color: #1a1408;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: opacity 0.2s;
+}
+
+.father-detail__profile-link:hover {
+  opacity: 0.88;
+}

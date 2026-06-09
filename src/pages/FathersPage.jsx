@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import PageShell from '../components/PageShell';
 import { FATHERS } from '../data/fathers';
 import './FathersPage.css';
@@ -108,6 +109,10 @@ function FatherDetail({ father, onClose }) {
             — {father.name}, <cite>{father.notableQuote.source}</cite>
           </footer>
         </blockquote>
+
+        <Link to={`/fathers/${father.id}`} className="father-detail__profile-link">
+          View Full Profile — {father.name.replace(/^(Saint|The Scholar)\s/, '')} →
+        </Link>
       </div>
     </div>
   );
