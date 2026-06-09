@@ -1,0 +1,333 @@
+/* ── Daily Readings Page ─────────────────────────────────── */
+.dr {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 2rem clamp(1rem, 4vw, 2.5rem) 4rem;
+}
+
+/* ── Date Navigator ───────────────────────────────────────── */
+.dr-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--color-surface, #16161e);
+  border: 1px solid var(--color-border, #2a2a3a);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.dr-nav__btn {
+  background: none;
+  border: 1px solid var(--color-border, #2a2a3a);
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.4rem;
+  color: var(--color-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s, color 0.2s;
+  line-height: 1;
+}
+
+.dr-nav__btn:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.dr-nav__center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 0;
+  text-align: center;
+}
+
+.dr-nav__greg {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.dr-nav__coptic {
+  font-size: 0.82rem;
+  color: var(--color-text-muted, #888);
+}
+
+.dr-nav__arabic {
+  font-family: serif;
+  direction: rtl;
+  color: var(--color-gold);
+}
+
+/* ── Today Jump ───────────────────────────────────────────── */
+.dr-today-jump {
+  margin-bottom: 1rem;
+}
+
+.dr-today-jump__btn {
+  background: none;
+  border: none;
+  color: var(--color-gold);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.dr-today-jump__btn:hover {
+  opacity: 0.8;
+}
+
+/* ── Day Header ───────────────────────────────────────────── */
+.dr-header {
+  margin-bottom: 2rem;
+}
+
+.dr-header__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.dr-header__day-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  background: var(--color-surface, #16161e);
+  border: 1px solid var(--color-border, #2a2a3a);
+  color: var(--color-text-muted, #888);
+}
+
+/* Wednesday & Friday fast days get a subtle red tint */
+.dr-header__day-badge--wednesday,
+.dr-header__day-badge--friday {
+  border-color: #c04040;
+  color: #e08080;
+}
+
+.dr-header__fast-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  background: rgba(192, 64, 64, 0.12);
+  border: 1px solid rgba(192, 64, 64, 0.4);
+  color: #e08080;
+}
+
+.dr-header__season-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  background: rgba(var(--color-gold-rgb, 192, 152, 58), 0.12);
+  border: 1px solid rgba(var(--color-gold-rgb, 192, 152, 58), 0.35);
+  color: var(--color-gold);
+}
+
+.dr-header__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 1.2;
+}
+
+.dr-header__feast-star {
+  color: var(--color-gold);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.dr-header__note {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--color-text-muted, #888);
+  margin: 0;
+  line-height: 1.65;
+  padding-left: 1.5rem;
+  border-left: 2px solid var(--color-gold);
+}
+
+/* ── Reading Panels ───────────────────────────────────────── */
+.dr-panels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 3rem;
+}
+
+.dr-panel {
+  background: var(--color-surface, #16161e);
+  border: 1px solid var(--color-border, #2a2a3a);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.dr-panel--open {
+  border-color: var(--color-gold);
+}
+
+.dr-panel__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dr-panel__header:hover .dr-panel__label {
+  color: var(--color-gold);
+}
+
+.dr-panel__icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  width: 28px;
+  text-align: center;
+}
+
+.dr-panel__meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.dr-panel__label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  transition: color 0.2s;
+}
+
+.dr-panel__ref {
+  font-size: 0.8rem;
+  color: var(--color-gold);
+  font-weight: 500;
+}
+
+.dr-panel__chevron {
+  color: var(--color-text-muted, #888);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.dr-panel--open .dr-panel__chevron {
+  transform: rotate(90deg);
+}
+
+.dr-panel__body {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  border-top: 1px solid var(--color-border, #2a2a3a);
+  margin-top: 0;
+}
+
+.dr-panel__loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  color: var(--color-text-muted, #888);
+  font-size: 0.85rem;
+}
+
+.dr-panel__spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-border, #2a2a3a);
+  border-top-color: var(--color-gold);
+  border-radius: 50%;
+  animation: dr-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes dr-spin {
+  to { transform: rotate(360deg); }
+}
+
+.dr-panel__error {
+  padding: 1rem 0 0;
+  font-size: 0.85rem;
+  color: #e08080;
+}
+
+.dr-panel__ref-title {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  margin: 1rem 0 0.75rem;
+}
+
+.dr-panel__text {
+  font-size: 0.925rem;
+  line-height: 1.85;
+  color: var(--color-text);
+  white-space: pre-line;
+  margin: 0;
+}
+
+/* ── About Section ────────────────────────────────────────── */
+.dr-about {
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--color-border, #2a2a3a);
+}
+
+.dr-about__title {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 1.5rem;
+}
+
+.dr-about__cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+.dr-about__col h3 {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  margin: 0 0 0.5rem;
+}
+
+.dr-about__col p {
+  font-size: 0.875rem;
+  line-height: 1.8;
+  color: var(--color-text-muted, #888);
+  margin: 0;
+}

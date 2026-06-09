@@ -20,6 +20,7 @@ const ChurchHistoryPage = lazy(() => import('../pages/ChurchHistoryPage'));
 const BooksPage        = lazy(() => import('../pages/BooksPage'));
 const EucharistPage    = lazy(() => import('../pages/EucharistPage'));
 const SaintsCalendarPage = lazy(() => import('../pages/SaintsCalendarPage'));
+const DailyReadingsPage  = lazy(() => import('../pages/DailyReadingsPage'));
 const NotFoundPage     = lazy(() => import('../pages/NotFoundPage'));
 
 function PageLoader() {
@@ -57,6 +58,7 @@ export const router = createBrowserRouter([
   { path: '/church-history', element: withSuspense(ChurchHistoryPage)   },
   { path: '/books',          element: withSuspense(BooksPage)           },
   { path: '/eucharist',     element: withSuspense(EucharistPage)        },
-  { path: '/saints-calendar', element: withSuspense(SaintsCalendarPage) },
+  { path: '/saints-calendar',  element: withSuspense(SaintsCalendarPage)  },
+  { path: '/daily-readings',   element: withSuspense(DailyReadingsPage)   },
   { path: '*',              element: withSuspense(NotFoundPage)          },
 ]);
