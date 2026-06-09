@@ -9,6 +9,7 @@ import SectionNav from '../components/SectionNav';
 import ShareBar from '../components/ShareBar';
 import TableOfContents from '../components/TableOfContents';
 import SearchModal from '../components/SearchModal';
+import AskAFather from '../components/AskAFather';
 import { SECTIONS } from '../data/sectionMeta';
 
 // Lazy-load section components (hero is inline, not lazy)
@@ -236,6 +237,7 @@ export default function MainPage() {
           );
         })}
       </Suspense>
+      <AskAFather />
     </div>
   );
 }
