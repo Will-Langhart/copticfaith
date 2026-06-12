@@ -3,7 +3,35 @@ import { Link, useLocation } from 'react-router-dom';
 import { FATHERS } from '../data/fathers';
 import './AskAFather.css';
 
-// ── Page context map ─────────────────────────────────────────
+// ── Journey stages ────────────────────────────────────────────
+const STAGES = [
+  {
+    id: 'curious',
+    label: 'Just Curious',
+    icon: '🕊',
+    desc: 'I\'ve heard about Coptic Christianity and want to learn more',
+    tone: 'Gentle and welcoming — no jargon, comparisons to familiar Protestant concepts, no pressure',
+  },
+  {
+    id: 'exploring',
+    label: 'Seriously Exploring',
+    icon: '📖',
+    desc: 'I\'m studying this faith and considering whether it\'s true',
+    tone: 'Theological depth, honest about differences with Protestantism, direct Father citations',
+  },
+  {
+    id: 'converting',
+    label: 'Preparing to Convert',
+    icon: '✦',
+    desc: 'I\'ve made or am close to making a decision — help me go deeper',
+    tone: 'Practical and personal — sacramental preparation, what catechumenate looks like, lived faith',
+  },
+];
+
+const STAGE_LABELS = { curious: 'Just Curious', exploring: 'Seriously Exploring', converting: 'Preparing to Convert' };
+const LS_KEY = 'acf_journey_stage';
+
+// ── Page context map ──────────────────────────────────────────
 const PAGE_CONTEXT = {
   '/baptism':       { topic: 'Holy Baptism', suggestions: ['Why does the Coptic Church baptize infants?', 'What is the significance of triple immersion?', 'What did Cyril of Jerusalem teach about baptism?'] },
   '/eucharist':     { topic: 'The Holy Eucharist', suggestions: ['Is the Eucharist truly the Body and Blood of Christ?', 'What did Ignatius of Antioch say about the Eucharist?', 'How does the Coptic Church understand the Eucharistic sacrifice?'] },
@@ -20,15 +48,40 @@ const PAGE_CONTEXT = {
   '/faq':           { topic: 'Coptic Faith Questions', suggestions: ['Is Coptic Christianity the same as Orthodox Christianity?', 'What makes the Coptic Church unique among Christian traditions?'] },
 };
 
-const DEFAULT_SUGGESTIONS = [
-  'What did the Church Fathers teach about the Trinity?',
-  'How did Athanasius defend the divinity of Christ?',
-  'What is theosis and how do we receive it?',
-  'Why does the Coptic Church venerate saints?',
-];
+const STAGE_SUGGESTIONS = {
+  curious:    ['What is Coptic Christianity?', 'How is this different from the church I grew up in?', 'Why do Coptic Christians venerate saints?', 'What do the Church Fathers have to do with the Bible?'],
+  exploring:  ['What did the Church Fathers teach about the Trinity?', 'How did Athanasius defend the divinity of Christ?', 'What is theosis and is it biblical?', 'What happened at the Council of Chalcedon?'],
+  converting: ['What does becoming Coptic Orthodox actually involve?', 'What are the Seven Holy Mysteries?', 'What is theosis and how do I receive it?', 'How do I find a Coptic parish near me?'],
+};
 
 function getFatherByID(id) {
   return FATHERS.find(f => f.id === id);
+}
+
+// ── Onboarding Screen ─────────────────────────────────────────
+function OnboardingScreen({ onSelect }) {
+  return (
+    <div className="acf-onboarding">
+      <p className="acf-onboarding__ornament" aria-hidden="true">✦</p>
+      <h3 className="acf-onboarding__title">Where are you on your journey?</h3>
+      <p className="acf-onboarding__subtitle">
+        Your answer helps the Fathers speak to you where you are.
+      </p>
+      <div className="acf-onboarding__cards">
+        {STAGES.map(stage => (
+          <button
+            key={stage.id}
+            className="acf-stage-card"
+            onClick={() => onSelect(stage.id)}
+          >
+            <span className="acf-stage-card__icon" aria-hidden="true">{stage.icon}</span>
+            <span className="acf-stage-card__label">{stage.label}</span>
+            <span className="acf-stage-card__desc">{stage.desc}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 // ── Citation Card ─────────────────────────────────────────────
@@ -76,7 +129,7 @@ function Message({ msg }) {
   if (msg.loading) {
     return (
       <div className="acf-msg acf-msg--father acf-msg--loading">
-        <span className="acf-loading__cross" aria-hidden="true">☩</span>
+        <img src="/logo.png" alt="" className="acf-loading__logo" aria-hidden="true" />
         <span className="acf-loading__text">The Fathers are reflecting…</span>
       </div>
     );
@@ -138,19 +191,35 @@ export default function AskAFather() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [hasUnread, setHasUnread] = useState(false);
+
+  // null = not yet chosen (show onboarding), string = stage id
+  const [journeyStage, setJourneyStage] = useState(() => localStorage.getItem(LS_KEY));
+
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const location = useLocation();
 
   const pageCtx = PAGE_CONTEXT[location.pathname] ?? null;
-  const suggestions = pageCtx?.suggestions ?? DEFAULT_SUGGESTIONS;
+  const suggestions = pageCtx?.suggestions
+    ?? (journeyStage ? STAGE_SUGGESTIONS[journeyStage] : STAGE_SUGGESTIONS.curious);
 
-  // Scroll to bottom when messages change
+  const showOnboarding = journeyStage === null;
+
+  function handleStageSelect(stageId) {
+    localStorage.setItem(LS_KEY, stageId);
+    setJourneyStage(stageId);
+  }
+
+  function handleStageChange() {
+    localStorage.removeItem(LS_KEY);
+    setJourneyStage(null);
+    setMessages([]);
+  }
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Focus input when opened
   useEffect(() => {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 150);
@@ -158,7 +227,6 @@ export default function AskAFather() {
     }
   }, [open]);
 
-  // Close on Escape
   useEffect(() => {
     const handler = e => { if (e.key === 'Escape') setOpen(false); };
     window.addEventListener('keydown', handler);
@@ -182,6 +250,7 @@ export default function AskAFather() {
         body: JSON.stringify({
           question: question.trim(),
           pageContext: pageCtx,
+          journeyStage,
         }),
       });
 
@@ -203,7 +272,7 @@ export default function AskAFather() {
     } finally {
       setLoading(false);
     }
-  }, [loading, pageCtx, open]);
+  }, [loading, pageCtx, open, journeyStage]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -224,7 +293,6 @@ export default function AskAFather() {
 
   return (
     <>
-      {/* ── Floating trigger button ── */}
       <button
         className={`acf-trigger ${open ? 'acf-trigger--open' : ''} ${hasUnread ? 'acf-trigger--unread' : ''}`}
         onClick={() => setOpen(o => !o)}
@@ -236,16 +304,10 @@ export default function AskAFather() {
         {hasUnread && <span className="acf-trigger__unread-dot" aria-hidden="true" />}
       </button>
 
-      {/* ── Backdrop (mobile) ── */}
       {open && (
-        <div
-          className="acf-backdrop"
-          onClick={() => setOpen(false)}
-          aria-hidden="true"
-        />
+        <div className="acf-backdrop" onClick={() => setOpen(false)} aria-hidden="true" />
       )}
 
-      {/* ── Drawer ── */}
       <div
         className={`acf-drawer ${open ? 'acf-drawer--open' : ''}`}
         role="dialog"
@@ -258,28 +320,31 @@ export default function AskAFather() {
             <img src="/logo.png" alt="" className="acf-header__cross" aria-hidden="true" />
             <div>
               <h2 className="acf-header__title">Ask a Church Father</h2>
-              <p className="acf-header__subtitle">Grounded in Scripture &amp; the Fathers</p>
+              {journeyStage ? (
+                <p className="acf-header__subtitle">
+                  <span className="acf-stage-badge">{STAGE_LABELS[journeyStage]}</span>
+                  <button className="acf-stage-change" onClick={handleStageChange}>change</button>
+                </p>
+              ) : (
+                <p className="acf-header__subtitle">Grounded in Scripture &amp; the Fathers</p>
+              )}
             </div>
           </div>
-          <button
-            className="acf-header__close"
-            onClick={() => setOpen(false)}
-            aria-label="Close"
-          >
-            ×
-          </button>
+          <button className="acf-header__close" onClick={() => setOpen(false)} aria-label="Close">×</button>
         </div>
 
         {/* Context pill */}
-        {pageCtx?.topic && (
+        {pageCtx?.topic && !showOnboarding && (
           <div className="acf-context-pill">
             <span aria-hidden="true">📖</span> You're reading about <strong>{pageCtx.topic}</strong>
           </div>
         )}
 
-        {/* Messages */}
+        {/* Messages / Onboarding */}
         <div className="acf-messages" onClick={handleFollowUp}>
-          {isEmpty ? (
+          {showOnboarding ? (
+            <OnboardingScreen onSelect={handleStageSelect} />
+          ) : isEmpty ? (
             <div className="acf-welcome">
               <p className="acf-welcome__ornament" aria-hidden="true">✦</p>
               <p className="acf-welcome__text">
@@ -287,11 +352,7 @@ export default function AskAFather() {
               </p>
               <div className="acf-suggestions">
                 {suggestions.map((s, i) => (
-                  <button
-                    key={i}
-                    className="acf-suggestion"
-                    onClick={() => handleSuggestion(s)}
-                  >
+                  <button key={i} className="acf-suggestion" onClick={() => handleSuggestion(s)}>
                     {s}
                   </button>
                 ))}
@@ -306,40 +367,38 @@ export default function AskAFather() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input */}
-        <form className="acf-form" onSubmit={handleSubmit}>
-          <textarea
-            ref={inputRef}
-            className="acf-input"
-            placeholder="Ask about the faith, the Fathers, the sacraments…"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                ask(input);
+        {/* Input — hidden during onboarding */}
+        {!showOnboarding && (
+          <form className="acf-form" onSubmit={handleSubmit}>
+            <textarea
+              ref={inputRef}
+              className="acf-input"
+              placeholder="Ask about the faith, the Fathers, the sacraments…"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(input); }
+              }}
+              rows={2}
+              maxLength={500}
+              disabled={loading}
+              aria-label="Your question"
+            />
+            <button
+              className="acf-submit"
+              type="submit"
+              disabled={loading || !input.trim()}
+              aria-label="Send question"
+            >
+              {loading
+                ? <span className="acf-submit__spinner" aria-hidden="true" />
+                : <span aria-hidden="true">↑</span>
               }
-            }}
-            rows={2}
-            maxLength={500}
-            disabled={loading}
-            aria-label="Your question"
-          />
-          <button
-            className="acf-submit"
-            type="submit"
-            disabled={loading || !input.trim()}
-            aria-label="Send question"
-          >
-            {loading ? (
-              <span className="acf-submit__spinner" aria-hidden="true" />
-            ) : (
-              <span aria-hidden="true">↑</span>
-            )}
-          </button>
-        </form>
+            </button>
+          </form>
+        )}
 
-        {!isEmpty && (
+        {!isEmpty && !showOnboarding && (
           <button className="acf-new-btn" onClick={() => setMessages([])}>
             + New conversation
           </button>

@@ -123,7 +123,7 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many questions — please wait a moment before asking again.' });
   }
 
-  const { question, pageContext } = req.body ?? {};
+  const { question, pageContext, journeyStage } = req.body ?? {};
 
   if (!question || typeof question !== 'string' || question.trim().length < 3) {
     return res.status(400).json({ error: 'Please ask a question.' });
@@ -138,11 +138,19 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Server configuration error.' });
   }
 
-  // Build user message — inject page context if available
+  // Build user message — inject journey stage and page context
+  const STAGE_TONES = {
+    curious:    'VISITOR STAGE: Just Curious. Speak gently with no jargon. Compare to familiar Protestant or general Christian concepts. Do not assume prior knowledge of Orthodoxy. Keep it warm and inviting.',
+    exploring:  'VISITOR STAGE: Seriously Exploring. This person is studying the faith critically. Use theological depth, cite specific Fathers and works, be honest and direct about where Coptic Orthodoxy differs from Protestantism.',
+    converting: 'VISITOR STAGE: Preparing to Convert. This person is close to or actively entering the Church. Be practical and personal. Focus on sacramental life, what catechumenate involves, the lived experience of the faith.',
+  };
+
+  const stageTone = STAGE_TONES[journeyStage] ?? '';
   const contextNote = pageContext?.topic
-    ? `[The user is currently reading about: ${pageContext.topic}]\n\n`
+    ? `[The user is currently reading about: ${pageContext.topic}]`
     : '';
-  const userMessage = `${contextNote}${question.trim()}`;
+  const prefix = [stageTone, contextNote].filter(Boolean).join('\n');
+  const userMessage = prefix ? `${prefix}\n\n${question.trim()}` : question.trim();
 
   try {
     const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
