@@ -16,6 +16,7 @@ const HolyOrdersPage   = lazy(() => import('../pages/HolyOrdersPage'));
 const MatrimonyPage    = lazy(() => import('../pages/MatrimonyPage'));
 const UnctionPage      = lazy(() => import('../pages/UnctionPage'));
 const FathersPage      = lazy(() => import('../pages/FathersPage'));
+const IntercessionOfSaintsPage = lazy(() => import('../pages/IntercessionOfSaintsPage'));
 const ChurchHistoryPage = lazy(() => import('../pages/ChurchHistoryPage'));
 const BooksPage        = lazy(() => import('../pages/BooksPage'));
 const EucharistPage    = lazy(() => import('../pages/EucharistPage'));
@@ -56,6 +57,7 @@ export const router = createBrowserRouter([
   { path: '/matrimony',      element: withSuspense(MatrimonyPage)       },
   { path: '/unction',        element: withSuspense(UnctionPage)         },
   { path: '/fathers',         element: withSuspense(FathersPage)          },
+  { path: '/intercession-of-saints', element: withSuspense(IntercessionOfSaintsPage) },
   { path: '/church-history', element: withSuspense(ChurchHistoryPage)   },
   { path: '/books',          element: withSuspense(BooksPage)           },
   { path: '/eucharist',     element: withSuspense(EucharistPage)        },

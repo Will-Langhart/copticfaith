@@ -90,6 +90,29 @@ a:hover {
   margin-bottom: 0.35em;
 }
 
+/* Objection callout: copper border — frames a Protestant objection before its answer */
+.objection-block {
+  font-family: var(--font-body);
+  padding: clamp(1rem, 3vw, 1.5rem);
+  margin: 1.25rem 0;
+  border-left: 3px solid var(--color-gold-dark);
+  background: rgba(184, 136, 0, 0.08);
+  color: var(--color-text-muted);
+}
+
+.objection-block__label {
+  display: block;
+  font-size: 0.78em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 0.5em;
+}
+
+.objection-block p {
+  margin: 0;
+}
+
 /* Father quote: blue border — upright for readability */
 .father-quote {
   font-family: var(--font-body);
