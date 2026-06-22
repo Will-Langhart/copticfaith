@@ -467,6 +467,21 @@
   margin-bottom: 0;
 }
 
+/* Streaming caret */
+.acf-cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--color-gold);
+  animation: acf-blink 1s steps(2, start) infinite;
+}
+
+@keyframes acf-blink {
+  to { visibility: hidden; }
+}
+
 /* ── Citations ────────────────────────────────────────── */
 .acf-msg__citations {
   width: 100%;

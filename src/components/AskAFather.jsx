@@ -85,13 +85,19 @@ function Message({ msg }) {
     );
   }
 
-  const { answer, citations = [], scripture = [], suggestedFollowUps = [] } = msg;
+  const { answer = '', citations = [], scripture = [], suggestedFollowUps = [], streaming } = msg;
+  const paragraphs = answer.split('\n\n');
 
   return (
     <div className="acf-msg acf-msg--father">
       <div className="acf-msg__answer">
-        {answer.split('\n\n').map((para, i) => (
-          <p key={i}>{para}</p>
+        {paragraphs.map((para, i) => (
+          <p key={i}>
+            {para}
+            {streaming && i === paragraphs.length - 1 && (
+              <span className="acf-cursor" aria-hidden="true" />
+            )}
+          </p>
         ))}
       </div>
 
@@ -168,6 +174,11 @@ export default function AskAFather() {
     setInput('');
     setLoading(true);
 
+    // Merge a partial update into the in-flight father message
+    const update = patch => setMessages(prev => prev.map(m =>
+      m.id === loadingMsg.id ? { ...m, ...patch } : m
+    ));
+
     try {
       const res = await fetch('/api/ask-father', {
         method: 'POST',
@@ -178,21 +189,51 @@ export default function AskAFather() {
         }),
       });
 
-      const data = await res.json();
+      // Validation / rate-limit / upstream errors arrive as plain JSON
+      if (!res.ok || !res.body) {
+        const data = await res.json().catch(() => ({}));
+        update({ loading: false, error: data.error ?? 'Something went wrong.' });
+        return;
+      }
 
-      setMessages(prev => prev.map(m =>
-        m.id === loadingMsg.id
-          ? { ...m, loading: false, ...(res.ok ? data : { error: data.error ?? 'Something went wrong.' }) }
-          : m
-      ));
+      // Consume the Server-Sent Events stream
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = '';
+      let answer = '';
 
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+
+        const events = buf.split('\n\n');
+        buf = events.pop() ?? '';
+        for (const evt of events) {
+          const dataLine = evt.split('\n').find(l => l.startsWith('data:'));
+          if (!dataLine) continue;
+          let payload;
+          try { payload = JSON.parse(dataLine.slice(5).trim()); } catch { continue; }
+
+          if (payload.type === 'delta') {
+            answer += payload.text;
+            update({ loading: false, streaming: true, answer });
+          } else if (payload.type === 'meta') {
+            update({
+              citations: payload.citations,
+              scripture: payload.scripture,
+              suggestedFollowUps: payload.suggestedFollowUps,
+            });
+          } else if (payload.type === 'error') {
+            update({ loading: false, streaming: false, error: payload.error });
+          }
+        }
+      }
+
+      update({ loading: false, streaming: false });
       if (!open) setHasUnread(true);
     } catch {
-      setMessages(prev => prev.map(m =>
-        m.id === loadingMsg.id
-          ? { ...m, loading: false, error: 'Could not connect. Please check your connection and try again.' }
-          : m
-      ));
+      update({ loading: false, streaming: false, error: 'Could not connect. Please check your connection and try again.' });
     } finally {
       setLoading(false);
     }

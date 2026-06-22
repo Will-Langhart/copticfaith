@@ -87,9 +87,11 @@ STRICT RULES:
 7. NEVER invent or paraphrase quotes and present them as direct quotations. Only quote if you are confident in the accuracy.
 8. Keep answers focused and clear — 2 to 3 paragraphs. Not a lecture.
 
-RESPONSE FORMAT — Return ONLY valid JSON, no markdown, no extra text:
+RESPONSE FORMAT — Follow this exactly:
+First, write your pastoral answer as plain prose (2-3 paragraphs). No markdown, no headings, no JSON in this part.
+Then output the delimiter ⟦META⟧ on its own line.
+After the delimiter, output a single valid JSON object — no markdown fences, no extra text — with this shape:
 {
-  "answer": "2-3 paragraph pastoral response in plain prose",
   "citations": [
     {
       "fatherId": "athanasius",
@@ -106,6 +108,8 @@ Include 1-3 citations. Include 1-3 scripture references. Include exactly 2 sugge
 
 AVAILABLE CHURCH FATHERS:
 ${FATHERS_CONTEXT}`;
+
+const META_DELIM = '⟦META⟧';
 
 // ── Handler ──────────────────────────────────────────────────
 export default async function handler(req, res) {
@@ -152,8 +156,9 @@ export default async function handler(req, res) {
   const prefix = [stageTone, contextNote].filter(Boolean).join('\n');
   const userMessage = prefix ? `${prefix}\n\n${question.trim()}` : question.trim();
 
+  let anthropicRes;
   try {
-    const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
+    anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'x-api-key': process.env.ANTHROPIC_API_KEY,
@@ -163,39 +168,101 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-5',
         max_tokens: 1200,
+        stream: true,
         system: SYSTEM_PROMPT,
         messages: [{ role: 'user', content: userMessage }],
       }),
     });
-
-    if (!anthropicRes.ok) {
-      const err = await anthropicRes.text();
-      console.error('Anthropic error:', err);
-      return res.status(502).json({ error: 'Could not reach the API. Please try again.' });
-    }
-
-    const data = await anthropicRes.json();
-    const rawText = data.content?.[0]?.text ?? '';
-
-    // Parse JSON response from Claude
-    let parsed;
-    try {
-      // Strip any accidental markdown fences
-      const clean = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
-      parsed = JSON.parse(clean);
-    } catch {
-      console.error('JSON parse failed:', rawText);
-      return res.status(502).json({ error: 'The response could not be parsed. Please try again.' });
-    }
-
-    // Validate shape
-    if (!parsed.answer || !Array.isArray(parsed.citations)) {
-      return res.status(502).json({ error: 'Unexpected response format. Please try again.' });
-    }
-
-    return res.status(200).json(parsed);
   } catch (err) {
-    console.error('ask-father error:', err);
+    console.error('ask-father fetch error:', err);
     return res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
+
+  if (!anthropicRes.ok || !anthropicRes.body) {
+    const err = await anthropicRes.text().catch(() => '');
+    console.error('Anthropic error:', err);
+    return res.status(502).json({ error: 'Could not reach the API. Please try again.' });
+  }
+
+  // ── Stream as Server-Sent Events ──────────────────────────
+  // Protocol: the model writes prose, then `⟦META⟧`, then a JSON
+  // metadata object. We forward prose deltas live and emit the
+  // parsed metadata as a final `meta` event.
+  res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-cache, no-transform');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+  res.flushHeaders?.();
+
+  const send = (obj) => res.write(`data: ${JSON.stringify(obj)}\n\n`);
+
+  const reader = anthropicRes.body.getReader();
+  const decoder = new TextDecoder();
+  let sseBuf = '';     // raw SSE buffer from Anthropic
+  let full = '';       // accumulated model text
+  let sentLen = 0;     // prose chars already forwarded to client
+
+  // Forward any prose not yet sent, never crossing the delimiter.
+  // While the delimiter is absent, hold back its max partial length
+  // so a delimiter arriving in pieces never leaks into the prose.
+  const flushProse = (final) => {
+    const idx = full.indexOf(META_DELIM);
+    const proseEnd = idx === -1 ? full.length : idx;
+    const safeEnd = (idx === -1 && !final)
+      ? Math.max(sentLen, proseEnd - (META_DELIM.length - 1))
+      : proseEnd;
+    if (safeEnd > sentLen) {
+      send({ type: 'delta', text: full.slice(sentLen, safeEnd) });
+      sentLen = safeEnd;
+    }
+  };
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      sseBuf += decoder.decode(value, { stream: true });
+
+      const lines = sseBuf.split('\n');
+      sseBuf = lines.pop() ?? '';
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue;
+        const payload = line.slice(5).trim();
+        if (!payload || payload === '[DONE]') continue;
+        let event;
+        try { event = JSON.parse(payload); } catch { continue; }
+        if (event.type === 'content_block_delta' && event.delta?.type === 'text_delta') {
+          full += event.delta.text;
+          flushProse(false);
+        }
+      }
+    }
+
+    flushProse(true);
+
+    // Parse the metadata tail after the delimiter
+    const idx = full.indexOf(META_DELIM);
+    if (idx !== -1) {
+      const tail = full.slice(idx + META_DELIM.length)
+        .replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
+      try {
+        const meta = JSON.parse(tail);
+        send({
+          type: 'meta',
+          citations: Array.isArray(meta.citations) ? meta.citations : [],
+          scripture: Array.isArray(meta.scripture) ? meta.scripture : [],
+          suggestedFollowUps: Array.isArray(meta.suggestedFollowUps) ? meta.suggestedFollowUps : [],
+        });
+      } catch {
+        console.error('Meta JSON parse failed:', tail);
+      }
+    }
+
+    send({ type: 'done' });
+    res.end();
+  } catch (err) {
+    console.error('ask-father stream error:', err);
+    send({ type: 'error', error: 'The connection was interrupted. Please try again.' });
+    res.end();
   }
 }
