@@ -125,7 +125,7 @@ export default async function handler(req, res) {
 
   const { question, pageContext, journeyStage } = req.body ?? {};
 
-  if (!question || typeof question !== 'string' || question.trim().length < 3) {
+  if (!question || typeof question !== 'string' || !question.trim()) {
     return res.status(400).json({ error: 'Please ask a question.' });
   }
 
