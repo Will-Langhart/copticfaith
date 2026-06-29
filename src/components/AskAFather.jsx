@@ -264,8 +264,12 @@ export default function AskAFather() {
         aria-label={open ? 'Close Ask a Church Father' : 'Ask a Church Father'}
         aria-expanded={open}
       >
-        <img src="/logo.png" alt="" className="acf-trigger__icon" aria-hidden="true" />
-        <span className="acf-trigger__label">Ask a Father</span>
+        <svg className="acf-trigger__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+            fill="currentColor"
+          />
+        </svg>
         {hasUnread && <span className="acf-trigger__unread-dot" aria-hidden="true" />}
       </button>
 

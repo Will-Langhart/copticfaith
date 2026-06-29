@@ -11,7 +11,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.65rem 1.1rem;
+  padding: 0.5rem 1.4rem;
   background: var(--color-gold);
   color: #0a0e17;
   border: none;
@@ -35,20 +35,11 @@
 }
 
 .acf-trigger__icon {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 2.25rem;
+  height: 2.25rem;
   object-fit: contain;
   flex-shrink: 0;
-}
-
-.acf-trigger__label {
-  display: none;
-}
-
-@media (min-width: 480px) {
-  .acf-trigger__label {
-    display: inline;
-  }
+  color: #fff;
 }
 
 /* Unread dot */
