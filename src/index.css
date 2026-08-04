@@ -12,6 +12,7 @@
   --color-divider: rgba(232, 170, 0, 0.3);
   --font-heading: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-serif: var(--font-heading);
   --header-height: clamp(3rem, 8vw, 4.5rem);
   --section-padding: clamp(3rem, 8vw, 6rem);
   --content-width: min(92vw, 1200px);

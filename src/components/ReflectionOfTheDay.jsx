@@ -33,16 +33,24 @@ export default function ReflectionOfTheDay() {
 
   return (
     <section className="reflection" aria-label="Reflection of the day">
-      <p className="reflection__eyebrow">✦ Reflection of the Day</p>
-      <blockquote className="reflection__quote">
-        “{reflection.text}”
-      </blockquote>
-      <cite className="reflection__attribution">
-        — {reflection.name}{reflection.source ? `, ${reflection.source}` : ''}
-      </cite>
-      <Link to={`/fathers/${reflection.id}`} className="reflection__cta">
-        Read more from this Father →
-      </Link>
+      <div className="reflection__card">
+        <p className="reflection__eyebrow">Reflection of the Day</p>
+        <div className="reflection__divider" aria-hidden="true">
+          <span>✦</span>
+        </div>
+        <blockquote className="reflection__quote">
+          {reflection.text}
+        </blockquote>
+        <cite className="reflection__attribution">
+          <span className="reflection__name">{reflection.name}</span>
+          {reflection.source && (
+            <span className="reflection__source">{reflection.source}</span>
+          )}
+        </cite>
+        <Link to={`/fathers/${reflection.id}`} className="reflection__cta">
+          Read more from this Father →
+        </Link>
+      </div>
     </section>
   );
 }
