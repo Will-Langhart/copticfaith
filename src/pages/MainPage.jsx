@@ -10,6 +10,7 @@ import ShareBar from '../components/ShareBar';
 import TableOfContents from '../components/TableOfContents';
 import SearchModal from '../components/SearchModal';
 import AskAFather from '../components/AskAFather';
+import ReflectionOfTheDay from '../components/ReflectionOfTheDay';
 import { SECTIONS } from '../data/sectionMeta';
 
 // Lazy-load section components (hero is inline, not lazy)
@@ -178,6 +179,9 @@ export default function MainPage() {
           </button>
         </div>
       </section>
+
+      {/* Reflection of the Day — deterministic patristic quote, no cron */}
+      <ReflectionOfTheDay />
 
       {/* Deep-dive topic cards */}
       <section className="deep-dives" aria-label="In-depth topic pages">
