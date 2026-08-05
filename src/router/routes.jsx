@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
+import RootLayout from '../components/RootLayout';
 
 const MainPage         = lazy(() => import('../pages/MainPage'));
 const GlossaryPage     = lazy(() => import('../pages/GlossaryPage'));
@@ -42,27 +43,32 @@ function withSuspense(Component) {
 }
 
 export const router = createBrowserRouter([
-  { path: '/',               element: withSuspense(MainPage)          },
-  { path: '/glossary',       element: withSuspense(GlossaryPage)      },
-  { path: '/reading-list',   element: withSuspense(ReadingListPage)   },
-  { path: '/faq',            element: withSuspense(FaqPage)           },
-  { path: '/contact',        element: withSuspense(ContactPage)       },
-  { path: '/scripture-index', element: withSuspense(ScriptureIndexPage) },
-  { path: '/baptism',        element: withSuspense(BaptismPage)         },
-  { path: '/salvation',      element: withSuspense(SalvationPage)       },
-  { path: '/sacraments',     element: withSuspense(SacramentsPage)      },
-  { path: '/chrismation',    element: withSuspense(ChrismationPage)     },
-  { path: '/confession',     element: withSuspense(ConfessionPage)      },
-  { path: '/holy-orders',    element: withSuspense(HolyOrdersPage)      },
-  { path: '/matrimony',      element: withSuspense(MatrimonyPage)       },
-  { path: '/unction',        element: withSuspense(UnctionPage)         },
-  { path: '/fathers',         element: withSuspense(FathersPage)          },
-  { path: '/intercession-of-saints', element: withSuspense(IntercessionOfSaintsPage) },
-  { path: '/church-history', element: withSuspense(ChurchHistoryPage)   },
-  { path: '/books',          element: withSuspense(BooksPage)           },
-  { path: '/eucharist',     element: withSuspense(EucharistPage)        },
-  { path: '/saints-calendar',  element: withSuspense(SaintsCalendarPage)  },
-  { path: '/daily-readings',   element: withSuspense(DailyReadingsPage)   },
-  { path: '/fathers/:id',      element: withSuspense(FatherProfilePage)   },
-  { path: '*',              element: withSuspense(NotFoundPage)          },
+  {
+    element: <RootLayout />,
+    children: [
+      { path: '/',               element: withSuspense(MainPage)          },
+      { path: '/glossary',       element: withSuspense(GlossaryPage)      },
+      { path: '/reading-list',   element: withSuspense(ReadingListPage)   },
+      { path: '/faq',            element: withSuspense(FaqPage)           },
+      { path: '/contact',        element: withSuspense(ContactPage)       },
+      { path: '/scripture-index', element: withSuspense(ScriptureIndexPage) },
+      { path: '/baptism',        element: withSuspense(BaptismPage)         },
+      { path: '/salvation',      element: withSuspense(SalvationPage)       },
+      { path: '/sacraments',     element: withSuspense(SacramentsPage)      },
+      { path: '/chrismation',    element: withSuspense(ChrismationPage)     },
+      { path: '/confession',     element: withSuspense(ConfessionPage)      },
+      { path: '/holy-orders',    element: withSuspense(HolyOrdersPage)      },
+      { path: '/matrimony',      element: withSuspense(MatrimonyPage)       },
+      { path: '/unction',        element: withSuspense(UnctionPage)         },
+      { path: '/fathers',         element: withSuspense(FathersPage)          },
+      { path: '/intercession-of-saints', element: withSuspense(IntercessionOfSaintsPage) },
+      { path: '/church-history', element: withSuspense(ChurchHistoryPage)   },
+      { path: '/books',          element: withSuspense(BooksPage)           },
+      { path: '/eucharist',     element: withSuspense(EucharistPage)        },
+      { path: '/saints-calendar',  element: withSuspense(SaintsCalendarPage)  },
+      { path: '/daily-readings',   element: withSuspense(DailyReadingsPage)   },
+      { path: '/fathers/:id',      element: withSuspense(FatherProfilePage)   },
+      { path: '*',              element: withSuspense(NotFoundPage)          },
+    ],
+  },
 ]);

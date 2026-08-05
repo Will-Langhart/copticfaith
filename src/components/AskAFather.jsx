@@ -71,7 +71,7 @@ function Message({ msg }) {
   if (msg.loading) {
     return (
       <div className="acf-msg acf-msg--father acf-msg--loading">
-        <img src="/logo.png" alt="" className="acf-loading__logo" aria-hidden="true" />
+        <img src="/logo-128.png" alt="" className="acf-loading__logo" aria-hidden="true" />
         <span className="acf-loading__text">The Fathers are reflecting…</span>
       </div>
     );
@@ -286,7 +286,7 @@ export default function AskAFather() {
         {/* Header */}
         <div className="acf-header">
           <div className="acf-header__left">
-            <img src="/logo.png" alt="" className="acf-header__cross" aria-hidden="true" />
+            <img src="/logo-128.png" alt="" className="acf-header__cross" aria-hidden="true" />
             <div>
               <h2 className="acf-header__title">Ask a Church Father</h2>
               <p className="acf-header__subtitle">Grounded in Scripture &amp; the Fathers</p>

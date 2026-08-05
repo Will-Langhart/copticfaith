@@ -30,7 +30,7 @@ export default function Header({ visible, sections = [], activeId, onNavigateCli
         aria-label={`${t('site_title')} – ${t('hero.begin')}`}
       >
         <span className="header__logo-svg" aria-hidden>
-          <img src="/logo.png" alt="" width="32" height="32" />
+          <img src="/logo-128.png" alt="" width="32" height="32" />
         </span>
         <span className="header__logo-text">{t('site_title')}</span>
       </a>
