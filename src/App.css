@@ -296,6 +296,7 @@
 /* Hero section - background image with overlay */
 .hero {
   position: relative;
+  overflow: hidden;
   scroll-margin-top: 0;
   min-height: 100vh;
   display: flex;
@@ -304,38 +305,67 @@
   justify-content: center;
   text-align: center;
   padding: var(--section-padding) clamp(1.5rem, 6vw, 4rem);
-  background-image: url('/coptic_orthodox_backdrop.png');
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
 }
 
-/* Main overlay: darkens image for text readability */
+/* Backdrop icon on its own layer so it can breathe (slow Ken Burns zoom) */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('/coptic_orthodox_backdrop.png');
+  background-size: cover;
+  background-position: center 42%;
+  background-repeat: no-repeat;
+  transform: scale(1.04);
+  animation: heroKenBurns 30s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes heroKenBurns {
+  from { transform: scale(1.04); }
+  to   { transform: scale(1.15); }
+}
+
+/* Main overlay: keeps the icon's face luminous, darkens edges + base for text */
 .hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(10, 14, 23, 0.5) 0%,
-    rgba(10, 14, 23, 0.75) 40%,
-    rgba(10, 14, 23, 0.85) 100%
-  );
-  z-index: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 85% 70% at 50% 38%,
+      rgba(10, 14, 23, 0.22) 0%,
+      rgba(10, 14, 23, 0.5) 52%,
+      rgba(10, 14, 23, 0.8) 100%),
+    linear-gradient(180deg,
+      rgba(10, 14, 23, 0.32) 0%,
+      rgba(10, 14, 23, 0.38) 44%,
+      rgba(10, 14, 23, 0.84) 100%);
 }
 
-/* Subtle vignette and bottom anchor for depth */
+/* Vignette for depth */
 .hero::after {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 1;
+  pointer-events: none;
   background: radial-gradient(
     ellipse 120% 100% at 50% 50%,
-    transparent 40%,
-    rgba(0, 0, 0, 0.25) 100%
+    transparent 45%,
+    rgba(0, 0, 0, 0.35) 100%
   );
+}
+
+/* Inset gold hairline — frames the icon like an iconographic panel */
+.hero__frame {
+  position: absolute;
+  inset: clamp(0.75rem, 2.5vw, 1.75rem);
+  z-index: 2;
   pointer-events: none;
-  z-index: 0;
+  border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+  border-radius: 2px;
+  box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.35);
 }
 
 .hero__star,
@@ -345,31 +375,52 @@
 .hero__scripture,
 .hero__btn {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .hero__star {
-  margin: 0 0 0.5rem;
-  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.1rem, 3vw, 1.4rem);
+  letter-spacing: 0.1em;
   color: var(--color-gold);
 }
 
 .hero__title {
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-size: clamp(2.1rem, 6.5vw, 4rem);
   font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.05;
   color: var(--color-text);
-  margin: 0 0 0.5rem;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  margin: 0 0 0.85rem;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.65);
 }
 
 .hero__subtitle {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
   font-family: var(--font-heading);
-  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-size: clamp(1.15rem, 2.5vw, 1.6rem);
   color: var(--color-gold);
-  margin: 0 0 1.5rem;
+  margin: 0 0 1.75rem;
   font-style: italic;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+}
+
+/* Flanking gold rules on the subtitle */
+.hero__subtitle::before,
+.hero__subtitle::after {
+  content: '';
+  width: clamp(1.5rem, 6vw, 3.5rem);
+  height: 1px;
+  background: linear-gradient(90deg, transparent,
+    color-mix(in srgb, var(--color-gold) 70%, transparent));
+}
+.hero__subtitle::after {
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--color-gold) 70%, transparent), transparent);
 }
 
 .hero__tagline {
@@ -377,44 +428,94 @@
   color: var(--color-text-muted);
   max-width: min(92vw, 1100px);
   margin: 0 auto 2rem;
-  line-height: 1.6;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
 }
 
 .hero__scripture {
-  font-family: var(--font-body);
-  font-size: clamp(1rem, 2.2vw, 1.25rem);
-  font-style: normal;
+  font-family: var(--font-heading);
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  font-style: italic;
   color: var(--color-gold);
   max-width: min(88vw, 1000px);
-  margin: 0 auto 2rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  margin: 0 auto 2.25rem;
+  line-height: 1.6;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
 }
 
 .hero__btn {
   display: inline-block;
-  padding: 0.9rem 2rem;
+  padding: 1rem 2.5rem;
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: 1.02rem;
   font-weight: 600;
+  letter-spacing: 0.03em;
   color: var(--color-bg);
   background: var(--color-gold);
   border: none;
   border-radius: 4px;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.25s, color 0.25s;
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.35),
+    0 0 0 1px color-mix(in srgb, var(--color-gold) 40%, transparent);
+  transition: background 0.25s, color 0.25s, transform 0.25s, box-shadow 0.25s;
 }
 
 .hero__btn:hover {
   background: var(--color-gold-light);
   color: var(--color-bg);
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 38px rgba(0, 0, 0, 0.45),
+    0 0 24px color-mix(in srgb, var(--color-gold) 30%, transparent);
+}
+
+/* ── Hero entrance animation (staggered rise/fade) ─────────────────────── */
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.hero__star,
+.hero__title,
+.hero__subtitle,
+.hero__tagline,
+.hero__scripture {
+  animation: heroRise 0.8s ease-out both;
+}
+.hero__btn,
+.hero__tools {
+  animation: heroFade 0.9s ease-out both;
+}
+.hero__star { animation-delay: 0.10s; }
+.hero__title { animation-delay: 0.22s; }
+.hero__subtitle { animation-delay: 0.34s; }
+.hero__tagline { animation-delay: 0.46s; }
+.hero__scripture { animation-delay: 0.58s; }
+.hero__btn { animation-delay: 0.72s; }
+.hero__tools { animation-delay: 0.84s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__bg { animation: none; transform: scale(1.03); }
+  .hero__star,
+  .hero__title,
+  .hero__subtitle,
+  .hero__tagline,
+  .hero__scripture,
+  .hero__btn,
+  .hero__tools { animation: none; }
 }
 
 /* ── Hero tools (print button) ─────────────────────────────────────────── */
 .hero__tools {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   margin-top: 1.5rem;
   display: flex;
   gap: 0.75rem;

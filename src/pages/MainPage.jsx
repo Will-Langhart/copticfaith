@@ -158,6 +158,8 @@ export default function MainPage() {
 
       {/* Hero section — not lazy loaded (above the fold) */}
       <section id="hero" className="hero">
+        <div className="hero__bg" aria-hidden="true" />
+        <div className="hero__frame" aria-hidden="true" />
         <p className="hero__star">✦</p>
         <h1 className="hero__title">THE ANCIENT FAITH</h1>
         <p className="hero__subtitle">ONCE DELIVERED TO THE SAINTS</p>
