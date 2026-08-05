@@ -6,8 +6,8 @@ import { FATHERS } from './fathers';
 
 export const SITE = {
   name: 'CopticFaith',
-  baseUrl: 'https://copticfaith.vercel.app',
-  ogImage: 'https://copticfaith.vercel.app/og-image.png',
+  baseUrl: 'https://copticfaith.app',
+  ogImage: 'https://copticfaith.app/og-image.png',
   defaultTitle: 'The Ancient Faith | Coptic Orthodoxy',
   defaultDescription:
     'The Ancient Faith: building the Biblical and historical case for Coptic Orthodoxy — Scripture, the Church Fathers, and primary sources, for Protestant readers.',
