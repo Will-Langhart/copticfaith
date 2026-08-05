@@ -2,29 +2,57 @@ import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import RootLayout from '../components/RootLayout';
 
-const MainPage         = lazy(() => import('../pages/MainPage'));
-const GlossaryPage     = lazy(() => import('../pages/GlossaryPage'));
-const ReadingListPage  = lazy(() => import('../pages/ReadingListPage'));
-const FaqPage          = lazy(() => import('../pages/FaqPage'));
-const ContactPage      = lazy(() => import('../pages/ContactPage'));
-const ScriptureIndexPage = lazy(() => import('../pages/ScriptureIndexPage'));
-const BaptismPage      = lazy(() => import('../pages/BaptismPage'));
-const SalvationPage    = lazy(() => import('../pages/SalvationPage'));
-const SacramentsPage   = lazy(() => import('../pages/SacramentsPage'));
-const ChrismationPage  = lazy(() => import('../pages/ChrismationPage'));
-const ConfessionPage   = lazy(() => import('../pages/ConfessionPage'));
-const HolyOrdersPage   = lazy(() => import('../pages/HolyOrdersPage'));
-const MatrimonyPage    = lazy(() => import('../pages/MatrimonyPage'));
-const UnctionPage      = lazy(() => import('../pages/UnctionPage'));
-const FathersPage      = lazy(() => import('../pages/FathersPage'));
-const IntercessionOfSaintsPage = lazy(() => import('../pages/IntercessionOfSaintsPage'));
-const ChurchHistoryPage = lazy(() => import('../pages/ChurchHistoryPage'));
-const BooksPage        = lazy(() => import('../pages/BooksPage'));
-const EucharistPage    = lazy(() => import('../pages/EucharistPage'));
-const SaintsCalendarPage = lazy(() => import('../pages/SaintsCalendarPage'));
-const DailyReadingsPage  = lazy(() => import('../pages/DailyReadingsPage'));
-const FatherProfilePage  = lazy(() => import('../pages/FatherProfilePage'));
-const NotFoundPage     = lazy(() => import('../pages/NotFoundPage'));
+// After a new deploy, the previously-loaded index.html references chunk
+// filenames (hashed) that no longer exist on the server. Importing one throws
+// "Failed to fetch dynamically imported module". When that happens, reload once
+// to pull the fresh index.html and the current chunk names. A sessionStorage
+// guard prevents an infinite reload loop if the import fails for another reason.
+const RELOAD_KEY = 'chunk-reload-attempted';
+
+function lazyWithReload(factory) {
+  return lazy(() =>
+    factory()
+      .then((module) => {
+        // Successful load — clear the guard so a later deploy can self-heal too.
+        sessionStorage.removeItem(RELOAD_KEY);
+        return module;
+      })
+      .catch((error) => {
+        if (!sessionStorage.getItem(RELOAD_KEY)) {
+          sessionStorage.setItem(RELOAD_KEY, '1');
+          window.location.reload();
+          // Return a never-resolving promise so React doesn't render the error
+          // before the reload takes effect.
+          return new Promise(() => {});
+        }
+        throw error;
+      })
+  );
+}
+
+const MainPage         = lazyWithReload(() => import('../pages/MainPage'));
+const GlossaryPage     = lazyWithReload(() => import('../pages/GlossaryPage'));
+const ReadingListPage  = lazyWithReload(() => import('../pages/ReadingListPage'));
+const FaqPage          = lazyWithReload(() => import('../pages/FaqPage'));
+const ContactPage      = lazyWithReload(() => import('../pages/ContactPage'));
+const ScriptureIndexPage = lazyWithReload(() => import('../pages/ScriptureIndexPage'));
+const BaptismPage      = lazyWithReload(() => import('../pages/BaptismPage'));
+const SalvationPage    = lazyWithReload(() => import('../pages/SalvationPage'));
+const SacramentsPage   = lazyWithReload(() => import('../pages/SacramentsPage'));
+const ChrismationPage  = lazyWithReload(() => import('../pages/ChrismationPage'));
+const ConfessionPage   = lazyWithReload(() => import('../pages/ConfessionPage'));
+const HolyOrdersPage   = lazyWithReload(() => import('../pages/HolyOrdersPage'));
+const MatrimonyPage    = lazyWithReload(() => import('../pages/MatrimonyPage'));
+const UnctionPage      = lazyWithReload(() => import('../pages/UnctionPage'));
+const FathersPage      = lazyWithReload(() => import('../pages/FathersPage'));
+const IntercessionOfSaintsPage = lazyWithReload(() => import('../pages/IntercessionOfSaintsPage'));
+const ChurchHistoryPage = lazyWithReload(() => import('../pages/ChurchHistoryPage'));
+const BooksPage        = lazyWithReload(() => import('../pages/BooksPage'));
+const EucharistPage    = lazyWithReload(() => import('../pages/EucharistPage'));
+const SaintsCalendarPage = lazyWithReload(() => import('../pages/SaintsCalendarPage'));
+const DailyReadingsPage  = lazyWithReload(() => import('../pages/DailyReadingsPage'));
+const FatherProfilePage  = lazyWithReload(() => import('../pages/FatherProfilePage'));
+const NotFoundPage     = lazyWithReload(() => import('../pages/NotFoundPage'));
 
 function PageLoader() {
   return (
