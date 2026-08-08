@@ -32,7 +32,7 @@ import { dirname, resolve } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 const DATA = resolve(ROOT, 'src', 'data');
-const OUT = resolve(ROOT, 'corpus');
+const OUT = resolve(ROOT, 'abba', 'corpus');  // inside abba/ so it ships with the deployment
 
 const load = (file) => import(new URL(`file://${resolve(DATA, file)}`).href);
 

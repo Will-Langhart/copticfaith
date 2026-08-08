@@ -2,6 +2,5 @@
   "dependencies": ["."],
   "graphs": {
     "abba": "./graph.py:graph"
-  },
-  "env": ".env"
+  }
 }

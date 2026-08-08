@@ -2,18 +2,21 @@
 
 Grounded, self-verifying backend for the **Ask a Church Father** widget. A
 retrieval-augmented LangGraph pipeline that gates every quotation against a
-vetted corpus, deployed on **LangGraph Platform**.
+vetted corpus, deployed on **LangSmith Deployment** (formerly LangGraph Platform).
 
 ```
 retrieve → synthesize → meta → verify → END
 ```
 
-- **retrieve** — semantic search over the corpus (Chroma + fastembed).
+- **retrieve** — semantic search over the corpus (Pinecone, integrated inference).
 - **synthesize** — streams the pastoral answer (Claude Sonnet), grounded in retrieved sources.
 - **meta** — Claude Haiku proposes citations / scripture / follow-ups (structured output).
 - **verify** — the anti-hallucination gate: a proposed quote survives only if it
   matches a record in `corpus/verified_quotes.json`; the canonical text + real
   source are attached, unverifiable quotes are dropped.
+
+Embeddings happen server-side in Pinecone, so the service ships no local model —
+cold starts stay light on serverless.
 
 ## Local development
 
@@ -21,9 +24,9 @@ retrieve → synthesize → meta → verify → END
 cd abba
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env          # add ANTHROPIC_API_KEY (+ LANGSMITH_API_KEY for tracing)
+cp .env.example .env          # add ANTHROPIC_API_KEY, PINECONE_API_KEY (+ LANGSMITH_API_KEY)
 
-python ingest.py              # embed corpus.jsonl → Chroma
+python ingest.py              # creates the Pinecone index + upserts the corpus
 langgraph dev                 # runs the graph locally + opens LangGraph Studio
 ```
 
@@ -44,22 +47,20 @@ SSE shape `AskAFather.jsx` consumes:
 
 Invoke input: `{ question, page_context?, journey_stage? }`.
 
-## Deploy to LangGraph Platform
+## Deploy to LangSmith Deployment
 
-1. Push this repo to GitHub.
-2. In LangSmith → LangGraph Platform, create a deployment from this repo
-   (root directory: `abba`, config: `langgraph.json`).
-3. Set env vars there: `ANTHROPIC_API_KEY`, `LANGSMITH_API_KEY`.
-4. Point the Vercel proxy at the deployment's URL.
-
-**Production caveat — vector store.** Local Chroma-on-disk is for dev only. Before
-a managed cloud deployment, swap `retrieval.py` to a hosted store (Chroma Cloud /
-Pinecone / pgvector) and run `ingest.py` against it once. The retrieval interface
-is isolated so only `retrieval.py` changes.
+1. Push `main` to GitHub.
+2. In LangSmith → **Deployments** → New deployment from this repo.
+   - **LangGraph API config file:** `abba/langgraph.json`  (it's in a subfolder)
+   - Git ref: `main`
+3. Set the deployment's env vars: `ANTHROPIC_API_KEY`, `PINECONE_API_KEY`
+   (same Pinecone key used by `ingest.py`), `LANGSMITH_API_KEY`.
+4. Copy the deployment's API URL → set `LANGGRAPH_API_URL` (+ `LANGGRAPH_API_KEY`)
+   in Vercel. That flips the proxy from fallback to the graph.
 
 ## Regenerating the corpus
 
-Produced from the React app's `src/data/*.js`:
+Produced from the React app's `src/data/*.js` (writes into `abba/corpus/`):
 
 ```bash
 cd .. && node scripts/export-corpus.mjs && cd abba && python ingest.py

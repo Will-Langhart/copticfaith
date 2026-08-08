@@ -100,7 +100,7 @@ def _context_block(retrieved: List[dict]) -> str:
 
 # ── Nodes ─────────────────────────────────────────────────────
 def _search(question: str, k: int) -> List[dict]:
-    # Runs in a worker thread — keeps fastembed/Chroma blocking I/O off the loop.
+    # Runs in a worker thread — keeps the Pinecone HTTP call off the event loop.
     return get_retriever().search(question, k)
 
 
@@ -218,7 +218,3 @@ def build_graph():
 
 # LangGraph Platform / CLI entry point (see langgraph.json).
 graph = build_graph()
-
-# Warm the embedder + index at import (off the event loop) so the first
-# request doesn't pay the model-load cost inside a node.
-get_retriever()

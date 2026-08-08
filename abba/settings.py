@@ -16,11 +16,15 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
 SYNTH_MODEL = os.getenv("SYNTH_MODEL", "claude-sonnet-4-5")
 META_MODEL = os.getenv("META_MODEL", "claude-haiku-4-5-20251001")
-EMBED_MODEL = os.getenv("EMBED_MODEL", "BAAI/bge-small-en-v1.5")
 
-CHROMA_DIR = _path("CHROMA_DIR", ".chroma")
-CORPUS_PATH = _path("CORPUS_PATH", "../corpus/corpus.jsonl")
-VERIFIED_QUOTES_PATH = _path("VERIFIED_QUOTES_PATH", "../corpus/verified_quotes.json")
+# Pinecone (integrated inference — embeddings happen server-side)
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY", "")
+PINECONE_INDEX = os.getenv("PINECONE_INDEX", "coptic-corpus")
+PINECONE_NAMESPACE = os.getenv("PINECONE_NAMESPACE", "copticfaith")
+PINECONE_EMBED_MODEL = os.getenv("PINECONE_EMBED_MODEL", "multilingual-e5-large")
 
-COLLECTION = "coptic_corpus"
+# Corpus lives inside abba/ so it ships with the deployment build.
+CORPUS_PATH = _path("CORPUS_PATH", "corpus/corpus.jsonl")
+VERIFIED_QUOTES_PATH = _path("VERIFIED_QUOTES_PATH", "corpus/verified_quotes.json")
+
 TOP_K = int(os.getenv("TOP_K", "6"))

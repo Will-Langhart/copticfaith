@@ -1,79 +1,54 @@
-"""Retrieval layer: fastembed (local embeddings) + Chroma (vector store).
+"""Retrieval layer: Pinecone with integrated inference.
 
-Kept deliberately behind a small interface so the store/embedder can be
-swapped for pgvector + Voyage/OpenAI in production without touching the graph.
+The index embeds text server-side (see PINECONE_EMBED_MODEL), so the service
+carries no local embedding model — keeping serverless cold starts light. Kept
+behind a small interface so the store can be swapped without touching the graph.
 """
 from __future__ import annotations
 
-import json
 from functools import lru_cache
 
-import chromadb
-from fastembed import TextEmbedding
+from pinecone import Pinecone
 
 import settings
 
 
+def _g(obj, key, default=None):
+    """Read a field from a Pinecone response object (dict- or attr-style)."""
+    try:
+        return obj[key]
+    except (KeyError, TypeError, IndexError):
+        return getattr(obj, key, default)
+
+
 class Retriever:
     def __init__(self):
-        self._embedder = TextEmbedding(model_name=settings.EMBED_MODEL)
-        self._client = chromadb.PersistentClient(path=str(settings.CHROMA_DIR))
-        self._col = self._client.get_or_create_collection(
-            settings.COLLECTION, metadata={"hnsw:space": "cosine"}
-        )
-
-    def embed(self, texts: list[str]) -> list[list[float]]:
-        return [v.tolist() for v in self._embedder.embed(texts)]
-
-    def count(self) -> int:
-        return self._col.count()
-
-    def index(self, records: list[dict], batch: int = 128) -> int:
-        """Upsert corpus records. Chroma metadata must be scalar, so we flatten
-        the fields the graph needs to build citations."""
-        for i in range(0, len(records), batch):
-            chunk = records[i : i + batch]
-            self._col.upsert(
-                ids=[r["id"] for r in chunk],
-                embeddings=self.embed([r["text"] for r in chunk]),
-                documents=[r["text"] for r in chunk],
-                metadatas=[_flatten(r) for r in chunk],
-            )
-        return self.count()
+        self._pc = Pinecone(api_key=settings.PINECONE_API_KEY)
+        self._index = self._pc.Index(settings.PINECONE_INDEX)
 
     def search(self, query: str, k: int = settings.TOP_K) -> list[dict]:
-        res = self._col.query(
-            query_embeddings=self.embed([query]),
-            n_results=k,
-            include=["documents", "metadatas", "distances"],
+        res = self._index.search(
+            namespace=settings.PINECONE_NAMESPACE,
+            query={"inputs": {"text": query}, "top_k": k},
         )
+        hits = _g(_g(res, "result", {}), "hits", []) or []
         out = []
-        for doc, meta, dist in zip(
-            res["documents"][0], res["metadatas"][0], res["distances"][0]
-        ):
-            out.append({**meta, "text": doc, "score": 1 - dist})
+        for h in hits:
+            f = _g(h, "fields", {}) or {}
+            out.append({
+                "chunk_id": _g(h, "_id", ""),
+                "type": _g(f, "type", ""),
+                "title": _g(f, "title", ""),
+                "source": _g(f, "source", "") or "",
+                "verified": bool(_g(f, "verified", False)),
+                "subject_id": _g(f, "subject_id", ""),
+                "subject_name": _g(f, "subject_name", ""),
+                "text": _g(f, "text", ""),
+                "score": _g(h, "_score", 0.0),
+            })
         return out
-
-
-def _flatten(r: dict) -> dict:
-    m = r.get("metadata", {})
-    return {
-        "chunk_id": r["id"],
-        "type": r["type"],
-        "title": r.get("title", ""),
-        "source": r.get("source", "") or "",
-        "verified": bool(r.get("verified")),
-        "subject_id": str(m.get("id", "")),
-        "subject_name": str(m.get("name") or m.get("attribution") or ""),
-    }
 
 
 @lru_cache(maxsize=1)
 def get_retriever() -> Retriever:
     return Retriever()
-
-
-def load_corpus(path=None) -> list[dict]:
-    path = path or settings.CORPUS_PATH
-    with open(path, encoding="utf-8") as f:
-        return [json.loads(line) for line in f if line.strip()]
