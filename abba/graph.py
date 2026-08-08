@@ -145,21 +145,26 @@ async def verify(state: State) -> dict:
     writer = get_stream_writer()
     writer({"kind": "status", "text": "Verifying citations…"})
     proposed = state.get("proposed", {}) or {}
+    retrieved = state.get("retrieved", []) or []
 
     citations, seen = [], set()
     for c in proposed.get("citations", []):
         match = _match_verified_quote(c.get("quote", ""))
         if match and match["id"] not in seen:
             seen.add(match["id"])
-            m = match["metadata"]
+            record = _prefer_father_quote(match)
+            m = record["metadata"]
             citations.append({
                 "fatherId": m.get("id", ""),
                 "name": m.get("attribution") or m.get("name", c.get("attribution", "")),
-                "quote": match["text"],          # canonical corpus text, not the model's paraphrase
-                "work": match.get("source", ""),
+                "quote": record["text"],         # canonical corpus text, not the model's paraphrase
+                "work": _work_title(record),
             })
 
-    scripture = [s for s in proposed.get("scripture", []) if _looks_like_ref(s)][:3]
+    scripture = [
+        s for s in proposed.get("scripture", [])
+        if _looks_like_ref(s) and _ref_in_sources(s, retrieved)
+    ][:3]
     followups = [q for q in proposed.get("followups", []) if q.strip()][:2]
 
     result = {"citations": citations, "scripture": scripture, "followups": followups}
@@ -199,6 +204,39 @@ def _match_verified_quote(quote: str, threshold: float = 0.6) -> Optional[dict]:
 
 def _looks_like_ref(s: str) -> bool:
     return bool(re.match(r"^[1-3]?\s?[A-Z][a-z]+.*\d", s.strip()))
+
+
+def _norm_ref(s: str) -> str:
+    # The corpus writes verse ranges with an en-dash; proposals use a hyphen.
+    return re.sub(r"[^a-z0-9]", "", (s or "").replace("\u2013", "-").lower())
+
+
+def _ref_in_sources(ref: str, retrieved: List[dict]) -> bool:
+    """A scripture reference survives only if a retrieved chunk actually contains it."""
+    needle = _norm_ref(ref)
+    if not needle:
+        return False
+    for r in retrieved:
+        blob = _norm_ref(" ".join(str(r.get(f, "")) for f in ("text", "source", "title")))
+        if needle in blob:
+            return True
+    return False
+
+
+def _prefer_father_quote(record: dict) -> dict:
+    """Resolve a matched record to the father_quote sharing its id, which carries real provenance."""
+    if record.get("type") == "father_quote":
+        return record
+    rid = (record.get("metadata") or {}).get("id")
+    for rec in _VERIFIED_QUOTES:
+        if rec.get("type") == "father_quote" and (rec.get("metadata") or {}).get("id") == rid:
+            return rec
+    return record
+
+
+def _work_title(record: dict) -> str:
+    # saint_quote records store the person's name in `source`, which is not provenance.
+    return record.get("source", "") if record.get("type") == "father_quote" else ""
 
 
 # ── Build ─────────────────────────────────────────────────────
