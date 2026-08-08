@@ -78,7 +78,12 @@ STAGE_TONES = {
 SYNTH_SYSTEM = """You are a theological companion for CopticFaith.com, guiding seekers and Protestants \
 exploring the ancient Coptic Orthodox faith.
 
-Write ONLY a warm, pastoral answer in plain prose (2-3 short paragraphs). No headings, no lists, no JSON.
+OUTPUT FORMAT (hard constraint): your text is streamed verbatim into a plain-text UI that does NOT \
+render markdown, so any markup reaches the visitor as literal characters on screen.
+Write ONLY a warm, pastoral answer in plain prose, 2-3 short paragraphs.
+Never emit: '#' headings of any level, '*' / '-' / '+' bullets, numbered lists ('1.'), '**bold**', or JSON.
+Do not give the answer a title. Begin with a sentence.
+Example of a compliant opening: "Theosis is the Church's word for the life God shares with us in Christ."
 
 Rules:
 - Ground your answer in the SOURCES provided below. Prefer them over general knowledge.
@@ -110,6 +115,22 @@ async def retrieve(state: State) -> dict:
     return {"retrieved": hits}
 
 
+def _strip_markdown_structure(text: str) -> str:
+    """Drop headings, bullet markers and bold runs the model emits despite SYNTH_SYSTEM."""
+    # Only the final `answer` in state is cleaned: the synthesize tokens reach the client
+    # on the "messages" channel (see README "Streaming contract"), bypassing this helper —
+    # so the Vercel proxy or AskAFather.jsx must also strip or render residual markdown.
+    # A heading line is a title, which the answer must not have, so the whole line goes;
+    # a bullet loses only its marker, since its text is part of the prose.
+    lines = []
+    for line in text.splitlines():
+        if re.match(r"^\s*#{1,6}\s*", line):
+            continue
+        lines.append(re.sub(r"^\s*[-*+]\s+", "", line))
+    out = re.sub(r"\*\*(.+?)\*\*", r"\1", "\n".join(lines))
+    return out.strip()
+
+
 async def synthesize(state: State) -> dict:
     get_stream_writer()({"kind": "status", "text": "Reflecting…"})
 
@@ -126,7 +147,8 @@ async def synthesize(state: State) -> dict:
     )
     # Tokens stream automatically to the "messages" channel during this call.
     msg = await _synth_model().ainvoke([SystemMessage(SYNTH_SYSTEM), HumanMessage(user)])
-    return {"answer": msg.content if isinstance(msg.content, str) else str(msg.content)}
+    raw = msg.content if isinstance(msg.content, str) else str(msg.content)
+    return {"answer": _strip_markdown_structure(raw)}
 
 
 async def meta(state: State) -> dict:
