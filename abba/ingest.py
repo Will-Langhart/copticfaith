@@ -57,7 +57,7 @@ def main():
 
     BATCH = 90  # integrated upsert_records caps at 96 per call
     for i in range(0, len(records), BATCH):
-        index.upsert_records(settings.PINECONE_NAMESPACE, records[i:i + BATCH])
+        index.upsert_records(namespace=settings.PINECONE_NAMESPACE, records=records[i:i + BATCH])
         print(f"  … {min(i + BATCH, len(records))}/{len(records)}")
 
     time.sleep(5)  # give the index a moment to finish indexing

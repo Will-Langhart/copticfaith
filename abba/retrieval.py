@@ -13,14 +13,6 @@ from pinecone import Pinecone
 import settings
 
 
-def _g(obj, key, default=None):
-    """Read a field from a Pinecone response object (dict- or attr-style)."""
-    try:
-        return obj[key]
-    except (KeyError, TypeError, IndexError):
-        return getattr(obj, key, default)
-
-
 class Retriever:
     def __init__(self):
         self._pc = Pinecone(api_key=settings.PINECONE_API_KEY)
@@ -31,20 +23,21 @@ class Retriever:
             namespace=settings.PINECONE_NAMESPACE,
             query={"inputs": {"text": query}, "top_k": k},
         )
-        hits = _g(_g(res, "result", {}), "hits", []) or []
+        data = res.to_dict() if hasattr(res, "to_dict") else res
+        hits = (data.get("result") or {}).get("hits") or []
         out = []
         for h in hits:
-            f = _g(h, "fields", {}) or {}
+            f = h.get("fields", {}) or {}
             out.append({
-                "chunk_id": _g(h, "_id", ""),
-                "type": _g(f, "type", ""),
-                "title": _g(f, "title", ""),
-                "source": _g(f, "source", "") or "",
-                "verified": bool(_g(f, "verified", False)),
-                "subject_id": _g(f, "subject_id", ""),
-                "subject_name": _g(f, "subject_name", ""),
-                "text": _g(f, "text", ""),
-                "score": _g(h, "_score", 0.0),
+                "chunk_id": h.get("_id") or h.get("id_") or "",
+                "type": f.get("type", ""),
+                "title": f.get("title", ""),
+                "source": f.get("source", "") or "",
+                "verified": bool(f.get("verified", False)),
+                "subject_id": f.get("subject_id", ""),
+                "subject_name": f.get("subject_name", ""),
+                "text": f.get("text", ""),
+                "score": h.get("_score", h.get("score_", 0.0)),
             })
         return out
 
