@@ -117,6 +117,7 @@ async function forwardToGraph(res, { question, pageContext, journeyStage }) {
       let text = msg.content;
       if (Array.isArray(text)) text = text.map((b) => (typeof b === 'string' ? b : b?.text || '')).join('');
       if (typeof text !== 'string') return;
+      text = text.replace(/^\s*#{1,6}\s+/, '');  // strip a stray leading markdown heading (defensive)
       const prev = sentLen.get(id) || 0;
       if (text.length > prev) {
         send({ type: 'delta', text: text.slice(prev) });  // partials are cumulative → forward the diff

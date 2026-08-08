@@ -28,3 +28,7 @@ CORPUS_PATH = _path("CORPUS_PATH", "corpus/corpus.jsonl")
 VERIFIED_QUOTES_PATH = _path("VERIFIED_QUOTES_PATH", "corpus/verified_quotes.json")
 
 TOP_K = int(os.getenv("TOP_K", "6"))
+
+# Reranking — fetch more candidates, then rerank to TOP_K for better precision.
+RERANK_MODEL = os.getenv("RERANK_MODEL", "pinecone-rerank-v0")
+RERANK_CANDIDATES = int(os.getenv("RERANK_CANDIDATES", "24"))

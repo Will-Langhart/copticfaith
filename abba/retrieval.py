@@ -21,7 +21,8 @@ class Retriever:
     def search(self, query: str, k: int = settings.TOP_K) -> list[dict]:
         res = self._index.search(
             namespace=settings.PINECONE_NAMESPACE,
-            query={"inputs": {"text": query}, "top_k": k},
+            query={"inputs": {"text": query}, "top_k": max(settings.RERANK_CANDIDATES, k)},
+            rerank={"model": settings.RERANK_MODEL, "top_n": k, "rank_fields": ["text"]},
         )
         data = res.to_dict() if hasattr(res, "to_dict") else res
         hits = (data.get("result") or {}).get("hits") or []
