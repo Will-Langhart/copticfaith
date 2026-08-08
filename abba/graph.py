@@ -86,15 +86,34 @@ Rules:
 - Name Church Fathers when relevant, but do NOT fabricate direct quotations; a later step attaches verified quotes.
 - Be honest and gentle about where traditions differ. If the sources don't address the question, say so."""
 
-META_SYSTEM = "You extract supporting citations. Only propose quotations that appear in the provided sources."
+META_SYSTEM = """You extract supporting citations from the provided sources.
+
+Citation rules — follow exactly:
+- A citation MUST be an actual quotation spoken or written BY a Church Father or saint, \
+appearing verbatim in the sources. Never propose biography, dates, titles, honorifics, \
+or third-person description ABOUT a person as a quotation.
+- `attribution` MUST be the person's name alone (e.g. "Saint Cyril of Alexandria"). Never \
+include a source-type prefix, a parenthetical, or a "source: ..." suffix.
+- `quote` MUST be the exact quotation text and nothing else.
+- If no source contains a real quotation, return an EMPTY citations list. Do not pad it \
+with descriptive prose.
+- Every proposed citation is checked against a verified-quote corpus and is SILENTLY \
+DISCARDED when it is not a real quotation, so one bad proposal can cost the reader every \
+citation. Propose nothing rather than something unverifiable."""
+
+QUOTE_TYPES = ("father_quote", "saint_quote")
 
 
 def _context_block(retrieved: List[dict]) -> str:
     lines = []
     for r in retrieved:
-        tag = f"[{r['type']}] {r.get('subject_name') or r.get('title')}"
-        src = f" (source: {r['source']})" if r.get("source") else ""
-        lines.append(f"{tag}{src}: {r['text']}")
+        subject = r.get("subject_name") or r.get("title") or ""
+        block = f"--- SOURCE (kind={r['type']})"
+        if subject:
+            block += f"\nAttribution: {subject}"
+        if r.get("source"):
+            block += f"\nWork: {r['source']}"
+        lines.append(f"{block}\nText: {r['text']}")
     return "\n\n".join(lines)
 
 
@@ -107,6 +126,15 @@ def _search(question: str, k: int) -> List[dict]:
 async def retrieve(state: State) -> dict:
     get_stream_writer()({"kind": "status", "text": "Searching the Fathers…"})
     hits = await asyncio.to_thread(_search, state["question"], settings.TOP_K)
+    # `meta` can only cite quotation chunks; a top-k pass full of bio/reading chunks
+    # leaves it nothing real to quote, and every proposal then fails verification.
+    if not any(h.get("type") in QUOTE_TYPES for h in hits):
+        wider = await asyncio.to_thread(_search, state["question"], settings.QUOTE_TOP_K)
+        seen = {h.get("chunk_id") for h in hits}
+        hits = hits + [
+            h for h in wider
+            if h.get("type") in QUOTE_TYPES and h.get("chunk_id") not in seen
+        ][: settings.QUOTE_BACKFILL]
     return {"retrieved": hits}
 
 
@@ -163,6 +191,13 @@ async def verify(state: State) -> dict:
     followups = [q for q in proposed.get("followups", []) if q.strip()][:2]
 
     result = {"citations": citations, "scripture": scripture, "followups": followups}
+    if (rejected := proposed.get("citations", [])) and not citations:
+        # Without this, a total drop is indistinguishable from "nothing was proposed".
+        print(
+            f"[verify] all {len(rejected)} proposed citations failed verification; "
+            f"attributions={[c.get('attribution') for c in rejected]}"
+        )
+        writer({"kind": "citations_dropped", "count": len(rejected)})
     writer({"kind": "meta", **result})  # final payload on the custom channel
     return result
 

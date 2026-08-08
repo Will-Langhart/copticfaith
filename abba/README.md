@@ -33,6 +33,13 @@ langgraph dev                 # runs the graph locally + opens LangGraph Studio
 `langgraph dev` serves the LangGraph Server API on `http://localhost:2024` and
 opens Studio, where you can watch each node (and the verifier's decisions) run.
 
+Tests mock retrieval, so no Pinecone index is needed:
+
+```bash
+pip install -r requirements-dev.txt
+pytest tests
+```
+
 ## Streaming contract
 
 The graph streams on two native channels; the Vercel proxy adapts them to the

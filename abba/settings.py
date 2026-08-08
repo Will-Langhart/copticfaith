@@ -28,3 +28,7 @@ CORPUS_PATH = _path("CORPUS_PATH", "corpus/corpus.jsonl")
 VERIFIED_QUOTES_PATH = _path("VERIFIED_QUOTES_PATH", "corpus/verified_quotes.json")
 
 TOP_K = int(os.getenv("TOP_K", "6"))
+# Wider second pass, used only to backfill quotation chunks when the top-k pass
+# returns none — the meta node has nothing citable without them.
+QUOTE_TOP_K = int(os.getenv("QUOTE_TOP_K", "20"))
+QUOTE_BACKFILL = int(os.getenv("QUOTE_BACKFILL", "2"))
