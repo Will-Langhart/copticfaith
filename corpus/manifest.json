@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2026-08-08T02:07:59.010Z",
+  "totalChunks": 362,
+  "verifiedQuotes": 69,
+  "byType": {
+    "father_bio": 16,
+    "father_teaching": 16,
+    "father_quote": 16,
+    "father_work": 46,
+    "glossary": 31,
+    "saint": 53,
+    "saint_quote": 53,
+    "scripture": 69,
+    "lectionary_feast": 23,
+    "lectionary_weekly": 7,
+    "reading": 32
+  },
+  "charStats": {
+    "total": 87823,
+    "avg": 243,
+    "max": 1402
+  },
+  "schema": "id, type, title, text, source, verified, metadata"
+}

@@ -1,0 +1,7 @@
+langgraph>=0.2.50
+langgraph-cli[inmem]>=0.1.55
+langchain-anthropic>=0.2
+langchain-core>=0.3
+chromadb>=0.5.5
+fastembed>=0.4
+python-dotenv>=1.0
