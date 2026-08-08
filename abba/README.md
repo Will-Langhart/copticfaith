@@ -54,9 +54,29 @@ Invoke input: `{ question, page_context?, journey_stage? }`.
    - **LangGraph API config file:** `abba/langgraph.json`  (it's in a subfolder)
    - Git ref: `main`
 3. Set the deployment's env vars: `ANTHROPIC_API_KEY`, `PINECONE_API_KEY`
-   (same Pinecone key used by `ingest.py`), `LANGSMITH_API_KEY`.
+   (same Pinecone key used by `ingest.py`), `LANGSMITH_API_KEY`, and
+   `ENVIRONMENT=production` — dev and prod share one LangSmith project, so
+   without it deployment traces are indistinguishable from `langgraph dev` runs.
 4. Copy the deployment's API URL → set `LANGGRAPH_API_URL` (+ `LANGGRAPH_API_KEY`)
    in Vercel. That flips the proxy from fallback to the graph.
+
+### Tracing metadata the proxy must supply
+
+The proxy owns the graph invocation, so it owns the root run's metadata. It must
+pass `config={"metadata": run_metadata(state, user_id)}` (see `graph.run_metadata`),
+which yields `environment`, `journey_stage`, `page_topic`, and `user_id`:
+
+- `user_id` — a stable **anonymous** session id (never an email, name, or other
+  real identity), so per-visitor filtering and "one bad session" triage work.
+- Capture the run id from the graph run and post the widget's thumbs up/down on
+  the existing `done` event:
+
+  ```python
+  client.create_feedback(run_id=<run id>, key="user_rating", score=<0 or 1>)
+  ```
+
+  Pass `run_id`, not `trace_id` — feedback attached to a trace id does not land
+  on the run.
 
 ## Regenerating the corpus
 

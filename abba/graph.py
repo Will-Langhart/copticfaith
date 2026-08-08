@@ -9,6 +9,11 @@ Streaming is LangGraph-native (no custom server):
   - status pings and the final citation payload go on the "custom" channel via
     get_stream_writer().
 
+Tracing is auto-instrumented by LangGraph Platform. The caller that invokes the
+graph (the Vercel proxy) must attach root-run metadata itself:
+
+    graph.astream(state, config={"metadata": run_metadata(state, user_id)}, ...)
+
 Phase 3 grows this by inserting a Supervisor before `retrieve` that routes to
 specialist nodes; State and the streamed channels do not change.
 """
@@ -59,13 +64,34 @@ class MetaOut(BaseModel):
 # ── Models (lazy singletons) ──────────────────────────────────
 @lru_cache(maxsize=1)
 def _synth_model() -> ChatAnthropic:
-    return ChatAnthropic(model=settings.SYNTH_MODEL, max_tokens=1200)
+    return ChatAnthropic(
+        model=settings.SYNTH_MODEL,
+        max_tokens=1200,
+        # Without ls_provider/ls_model_name LangSmith cannot price the span (total_cost is null).
+        metadata={"ls_provider": "anthropic", "ls_model_name": settings.SYNTH_MODEL},
+    )
 
 
 @lru_cache(maxsize=1)
 def _meta_model():
     # Structured output → tool call, so no prose tokens leak into the stream.
-    return ChatAnthropic(model=settings.META_MODEL, max_tokens=700).with_structured_output(MetaOut)
+    return ChatAnthropic(
+        model=settings.META_MODEL,
+        max_tokens=700,
+        metadata={"ls_provider": "anthropic", "ls_model_name": settings.META_MODEL},
+    ).with_structured_output(MetaOut)
+
+
+# ── Tracing metadata ──────────────────────────────────────────
+def run_metadata(state: State, user_id: str = "") -> dict:
+    """Root-run metadata: environment split, personalization dimensions, visitor id."""
+    page_context = state.get("page_context") or {}
+    return {
+        "environment": settings.ENVIRONMENT,
+        "journey_stage": state.get("journey_stage"),
+        "page_topic": page_context.get("topic"),
+        "user_id": user_id,
+    }
 
 
 # ── Prompts ───────────────────────────────────────────────────

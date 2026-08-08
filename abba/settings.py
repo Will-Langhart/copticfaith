@@ -14,6 +14,9 @@ def _path(env: str, default: str) -> Path:
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
+# Separates local-dev traces from deployment traffic in the shared LangSmith project.
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+
 SYNTH_MODEL = os.getenv("SYNTH_MODEL", "claude-sonnet-4-5")
 META_MODEL = os.getenv("META_MODEL", "claude-haiku-4-5-20251001")
 
