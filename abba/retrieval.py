@@ -19,10 +19,12 @@ class Retriever:
         self._index = self._pc.Index(settings.PINECONE_INDEX)
 
     def search(self, query: str, k: int = settings.TOP_K) -> list[dict]:
+        candidates = max(settings.RERANK_CANDIDATES, k)
         res = self._index.search(
             namespace=settings.PINECONE_NAMESPACE,
-            query={"inputs": {"text": query}, "top_k": max(settings.RERANK_CANDIDATES, k)},
-            rerank={"model": settings.RERANK_MODEL, "top_n": k, "rank_fields": ["text"]},
+            query={"inputs": {"text": query}, "top_k": candidates},
+            # Rerank the full candidate set (not just k) so dedup has room to work.
+            rerank={"model": settings.RERANK_MODEL, "top_n": candidates, "rank_fields": ["text"]},
         )
         data = res.to_dict() if hasattr(res, "to_dict") else res
         hits = (data.get("result") or {}).get("hits") or []
@@ -40,7 +42,28 @@ class Retriever:
                 "text": f.get("text", ""),
                 "score": h.get("_score", h.get("score_", 0.0)),
             })
-        return out
+        return _dedup(out, k)
+
+
+def _dedup(hits: list[dict], k: int) -> list[dict]:
+    """Keep the first (highest-ranked) hit per (subject_id, type), take top k.
+
+    Keying on type — not subject_id alone — preserves a Father's bio + quote +
+    teaching together while collapsing redundant same-type chunks. A plain
+    subject dedup would drop a verified quote whenever the bio outranks it.
+    Chunks without a subject_id (glossary, scripture) never dedup.
+    """
+    seen, out = set(), []
+    for h in hits:
+        sid = h.get("subject_id") or ""
+        key = (sid, h.get("type", "")) if sid else ("", h.get("chunk_id"))
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(h)
+        if len(out) >= k:
+            break
+    return out
 
 
 @lru_cache(maxsize=1)

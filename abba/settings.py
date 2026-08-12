@@ -32,3 +32,12 @@ TOP_K = int(os.getenv("TOP_K", "6"))
 # Reranking — fetch more candidates, then rerank to TOP_K for better precision.
 RERANK_MODEL = os.getenv("RERANK_MODEL", "pinecone-rerank-v0")
 RERANK_CANDIDATES = int(os.getenv("RERANK_CANDIDATES", "24"))
+
+# Answer honesty: if the top rerank score falls below this floor (or nothing is
+# retrieved), synth is told the sources are thin and to avoid inventing specifics.
+# Conservative default — rarely fires. TODO: tune to real pinecone-rerank-v0 scores.
+RELEVANCE_FLOOR = float(os.getenv("RELEVANCE_FLOOR", "0.15"))
+
+# Safety net: if meta proposes no citations but a verified quote was retrieved,
+# surface the top one so the "Fathers Speak" card still populates.
+CITATION_FALLBACK = os.getenv("CITATION_FALLBACK", "true").strip().lower() != "false"

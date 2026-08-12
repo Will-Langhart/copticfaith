@@ -75,29 +75,48 @@ STAGE_TONES = {
     "converting": "The visitor is close to entering the Church. Be practical and personal about sacramental life.",
 }
 
-SYNTH_SYSTEM = """You are a theological companion for CopticFaith.com, guiding seekers and Protestants \
-exploring the ancient Coptic Orthodox faith.
+SYNTH_SYSTEM = """You are a theological companion for CopticFaith.com, guiding visitors — from the \
+merely curious to those preparing to enter the ancient Coptic Orthodox faith.
 
 Write a warm, pastoral answer as PLAIN PROSE only — 2-3 short paragraphs.
 Absolutely NO Markdown of any kind: no '#' headings or titles, no '*'/'-' bullet lists,
 no '**bold**' or '_italics_', no backticks. Begin directly with your first sentence, not a title.
 
 Rules:
-- Ground your answer in the SOURCES provided below. Prefer them over general knowledge.
+- Ground your answer in the SOURCES provided below. They are ordered most-relevant first — lean on the
+  earliest, highest-relevance ones and on any marked VERIFIED QUOTE. Prefer them over general knowledge.
 - Keep Jesus Christ — His Incarnation, Cross, and Resurrection — at the center.
 - Name Church Fathers when relevant, but do NOT fabricate direct quotations; a later step attaches verified quotes.
 - Be honest and gentle about where traditions differ. If the sources don't address the question, say so."""
 
-META_SYSTEM = "You extract supporting citations. Only propose quotations that appear in the provided sources."
+META_SYSTEM = (
+    "You extract supporting citations, relevant scripture, and follow-up questions. "
+    "Cite ONLY quotations from the provided verified-quotes list, copied verbatim — never invent or paraphrase a quote."
+)
 
 
 def _context_block(retrieved: List[dict]) -> str:
     lines = []
-    for r in retrieved:
-        tag = f"[{r['type']}] {r.get('subject_name') or r.get('title')}"
-        src = f" (source: {r['source']})" if r.get("source") else ""
-        lines.append(f"{tag}{src}: {r['text']}")
+    for i, r in enumerate(retrieved, 1):
+        name = r.get("subject_name") or r.get("title") or ""
+        tags = [t for t in (r.get("type", ""), "VERIFIED QUOTE" if r.get("verified") else "") if t]
+        tags.append(f"relevance {r.get('score', 0.0):.2f}")
+        src = f" — {r['source']}" if r.get("source") else ""
+        lines.append(f"[S{i}] {name} ({', '.join(tags)}){src}:\n{r['text']}")
     return "\n\n".join(lines)
+
+
+def _verified_quotes_block(retrieved: List[dict]) -> str:
+    """The verified quotes present in the retrieved set — meta cites only from these."""
+    lines, n = [], 0
+    for r in retrieved:
+        if not r.get("verified"):
+            continue
+        n += 1
+        name = r.get("subject_name") or r.get("title") or ""
+        src = f" — {r['source']}" if r.get("source") else ""
+        lines.append(f'[Q{n}] {name}{src}: "{r["text"]}"')
+    return "\n".join(lines)
 
 
 # ── Nodes ─────────────────────────────────────────────────────
@@ -115,15 +134,24 @@ async def retrieve(state: State) -> dict:
 async def synthesize(state: State) -> dict:
     get_stream_writer()({"kind": "status", "text": "Reflecting…"})
 
+    retrieved = state.get("retrieved", [])
     prefix = []
     if tone := STAGE_TONES.get(state.get("journey_stage") or ""):
         prefix.append(tone)
     if (pc := state.get("page_context")) and pc.get("topic"):
         prefix.append(f"The visitor is currently reading about: {pc['topic']}.")
 
+    top_score = retrieved[0].get("score", 0.0) if retrieved else 0.0
+    if not retrieved or top_score < settings.RELEVANCE_FLOOR:
+        prefix.append(
+            "The sources below only weakly match this question. Answer briefly from what is genuinely "
+            "relevant; if the Fathers' sources here don't directly address it, say so plainly rather "
+            "than inventing specifics."
+        )
+
     user = (
         ("\n".join(prefix) + "\n\n" if prefix else "")
-        + f"SOURCES:\n{_context_block(state.get('retrieved', []))}\n\n"
+        + f"SOURCES:\n{_context_block(retrieved)}\n\n"
         + f"QUESTION: {state['question']}"
     )
     # Tokens stream automatically to the "messages" channel during this call.
@@ -133,11 +161,15 @@ async def synthesize(state: State) -> dict:
 
 async def meta(state: State) -> dict:
     get_stream_writer()({"kind": "status", "text": "Gathering citations…"})
+    retrieved = state.get("retrieved", [])
+    quotes_block = _verified_quotes_block(retrieved) or "(none available — return no citations)"
     user = (
         f"QUESTION: {state['question']}\n\n"
         f"ANSWER GIVEN:\n{state.get('answer', '')}\n\n"
-        f"AVAILABLE SOURCES:\n{_context_block(state.get('retrieved', []))}\n\n"
-        "Provide citations drawn from the sources, relevant scripture, and exactly two follow-up questions."
+        "QUOTES YOU MAY CITE (copy the text verbatim; choose the 1-3 most relevant to the answer; "
+        f"if none genuinely fit, return no citations):\n{quotes_block}\n\n"
+        f"CONTEXT (for scripture and follow-ups only):\n{_context_block(retrieved)}\n\n"
+        "Provide citations drawn only from the quotes list above, relevant scripture, and exactly two follow-up questions."
     )
     out: MetaOut = await _meta_model().ainvoke([SystemMessage(META_SYSTEM), HumanMessage(user)])
     return {"proposed": out.model_dump()}
@@ -160,6 +192,11 @@ async def verify(state: State) -> dict:
                 "quote": match["text"],          # canonical corpus text, not the model's paraphrase
                 "work": match.get("source", ""),
             })
+
+    # Fallback: meta proposed nothing citable but a verified quote was retrieved — surface the top one.
+    if settings.CITATION_FALLBACK and not citations:
+        if fb := _fallback_citation(state.get("retrieved", [])):
+            citations.append(fb)
 
     scripture = [s for s in proposed.get("scripture", []) if _looks_like_ref(s)][:3]
     followups = [q for q in proposed.get("followups", []) if q.strip()][:2]
@@ -197,6 +234,24 @@ def _match_verified_quote(quote: str, threshold: float = 0.6) -> Optional[dict]:
         if score > best_score:
             best, best_score = rec, score
     return best if best_score >= threshold else None
+
+
+def _fallback_citation(retrieved: List[dict]) -> Optional[dict]:
+    """Top-ranked retrieved verified quote, resolved to its canonical corpus record."""
+    for r in retrieved:
+        if not r.get("verified"):
+            continue
+        match = _match_verified_quote(r.get("text", ""))
+        if not match:
+            continue
+        m = match["metadata"]
+        return {
+            "fatherId": m.get("id", ""),
+            "name": m.get("attribution") or m.get("name", ""),
+            "quote": match["text"],
+            "work": match.get("source", ""),
+        }
+    return None
 
 
 def _looks_like_ref(s: str) -> bool:
