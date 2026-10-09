@@ -76,12 +76,7 @@ export default function DailyReadingsPage() {
   const [loadingSet, setLoadingSet] = useState(new Set());
 
   const coptic = gregorianToCoptic(date);
-  const readings = getReadingsForDay(
-    coptic.month,
-    coptic.day,
-    date.getDay(),
-    coptic.monthName
-  );
+  const readings = getReadingsForDay(date, coptic.month, coptic.day);
 
   // Mapping of panel keys to icons / labels
   const PANELS = [
