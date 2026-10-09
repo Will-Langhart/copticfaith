@@ -165,6 +165,28 @@
 
 .fp-hero__epithet-ornament { color: var(--color-gold); font-style: normal; font-size: 0.65rem; }
 
+.fp-hero__ask {
+  margin-top: 1rem;
+  padding: 0.5rem 1.1rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-gold);
+  background: rgba(232, 170, 0, 0.08);
+  border: 1px solid var(--color-divider);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.fp-hero__ask:hover,
+.fp-hero__ask:focus-visible {
+  background: rgba(232, 170, 0, 0.16);
+  border-color: var(--color-gold);
+  outline: none;
+}
+
 /* ── Tagline ──────────────────────────────────────────────── */
 .fp-tagline {
   background: linear-gradient(135deg, rgba(192,152,58,0.1) 0%, rgba(192,152,58,0.04) 100%);

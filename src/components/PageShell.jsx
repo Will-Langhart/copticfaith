@@ -1,11 +1,16 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import AskAFather from './AskAFather';
+import FastBadge from './FastBadge';
+import NavOverlay from './NavOverlay';
+import SiteNav from './SiteNav';
 
 export default function PageShell({ children, title }) {
   const { t } = useTranslation();
   const { theme, toggle } = useTheme();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="page-shell">
@@ -17,30 +22,9 @@ export default function PageShell({ children, title }) {
           <span className="header__logo-text">{t('site_title')}</span>
         </Link>
 
-        <nav className="page-shell__nav" aria-label="Site navigation">
-          <Link to="/sacraments" className="page-shell__nav-link page-shell__nav-link--highlight">The Seven Mysteries</Link>
-          <span className="page-shell__nav-divider" aria-hidden="true" />
-          <Link to="/baptism" className="page-shell__nav-link">Baptism</Link>
-          <Link to="/chrismation" className="page-shell__nav-link">Chrismation</Link>
-          <Link to="/confession" className="page-shell__nav-link">Confession</Link>
-          <Link to="/eucharist" className="page-shell__nav-link">Eucharist</Link>
-          <Link to="/unction" className="page-shell__nav-link">Unction</Link>
-          <Link to="/matrimony" className="page-shell__nav-link">Matrimony</Link>
-          <Link to="/holy-orders" className="page-shell__nav-link">Holy Orders</Link>
-          <span className="page-shell__nav-divider" aria-hidden="true" />
-          <Link to="/daily-readings" className="page-shell__nav-link">Daily Readings</Link>
-          <Link to="/saints-calendar" className="page-shell__nav-link">Saints</Link>
-          <Link to="/salvation" className="page-shell__nav-link">Salvation</Link>
-          <Link to="/church-history" className="page-shell__nav-link">Church History</Link>
-          <Link to="/fathers" className="page-shell__nav-link page-shell__nav-link--fathers">The Fathers</Link>
-          <Link to="/intercession-of-saints" className="page-shell__nav-link">Intercession of the Saints</Link>
-          <Link to="/books" className="page-shell__nav-link">Books</Link>
-          <Link to="/reading-list" className="page-shell__nav-link">{t('header.reading_list')}</Link>
-          <Link to="/faq" className="page-shell__nav-link">{t('header.faq')}</Link>
-          <Link to="/glossary" className="page-shell__nav-link">{t('header.glossary')}</Link>
-          <Link to="/scripture-index" className="page-shell__nav-link">{t('header.scripture_index')}</Link>
-          <Link to="/contact" className="page-shell__nav-link">{t('header.contact')}</Link>
-        </nav>
+        <SiteNav />
+
+        <FastBadge />
 
         <button
           className="dark-toggle header__icon-btn"
@@ -50,7 +34,19 @@ export default function PageShell({ children, title }) {
         >
           {theme === 'dark' ? '☀' : '☾'}
         </button>
+
+        <button
+          className="header__menu-btn"
+          onClick={() => setMenuOpen(true)}
+          aria-label={t('nav.open_menu')}
+        >
+          <span className="header__menu-icon" />
+          <span className="header__menu-icon" />
+          <span className="header__menu-icon" />
+        </button>
       </header>
+
+      <NavOverlay isOpen={menuOpen} sections={[]} onClose={() => setMenuOpen(false)} />
 
       <main className="page-shell__main">
         {title && <div className="page-hero"><h1 className="page-hero__title">{title}</h1></div>}

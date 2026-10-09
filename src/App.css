@@ -70,78 +70,6 @@
   display: block;
 }
 
-/* Section tabs in header */
-.header__nav {
-  display: none;
-}
-
-@media (min-width: 1024px) {
-  .header__nav {
-    display: block;
-    flex: 1;
-    min-width: 0;
-    margin: 0 clamp(1rem, 2vw, 2rem);
-  }
-
-  .header__nav-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem 0.5rem;
-  }
-
-  .header__nav-item {
-    margin: 0;
-  }
-
-  .header__nav-link {
-    display: block;
-    padding: 0.35rem 0.6rem;
-    font-family: var(--font-body);
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--color-text-muted);
-    text-decoration: none;
-    border-radius: 4px;
-    white-space: nowrap;
-    transition: color 0.2s, background 0.2s;
-  }
-
-  .header__nav-link:hover {
-    color: var(--color-gold);
-    background: rgba(232, 170, 0, 0.1);
-  }
-
-  .header__nav-link--active {
-    color: var(--color-gold);
-    background: rgba(232, 170, 0, 0.12);
-  }
-
-  .header__nav-item--divider {
-    width: 1px;
-    height: 16px;
-    background: var(--color-divider, rgba(255,255,255,0.15));
-    margin: 0 4px;
-    align-self: center;
-    flex-shrink: 0;
-  }
-
-  .header__nav-link--page {
-    opacity: 0.85;
-  }
-}
-
-@media (max-width: 1100px) {
-  .header__nav-link {
-    font-size: 0.7rem;
-    padding: 0.3rem 0.5rem;
-  }
-}
-
 .header__menu-btn {
   display: flex;
   flex-direction: column;
@@ -172,7 +100,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: safe center;
+  overflow-y: auto;
   padding: var(--header-height) 2rem 2rem;
   animation: navFadeIn 0.3s ease;
 }
@@ -183,7 +112,7 @@
 }
 
 .nav-overlay__close {
-  position: absolute;
+  position: fixed;
   top: 1.5rem;
   right: 1.5rem;
   width: 48px;
@@ -565,6 +494,17 @@
   flex-shrink: 0;
 }
 
+/* Fit logo + five header buttons on a 375px phone. */
+@media (max-width: 400px) {
+  .header__actions {
+    gap: 0.125rem;
+  }
+
+  .header__actions .header__icon-btn:not(.lang-toggle) {
+    width: 32px;
+  }
+}
+
 .header__icon-btn {
   display: flex;
   align-items: center;
@@ -591,37 +531,6 @@
   font-weight: 600;
   width: auto;
   padding: 0 0.5rem;
-}
-
-/* Additional page links in header (desktop only) */
-.header__pages-nav {
-  display: none;
-}
-
-@media (min-width: 1280px) {
-  .header__pages-nav {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
-
-  .header__page-link {
-    font-family: var(--font-body);
-    font-size: 0.72rem;
-    font-weight: 500;
-    color: var(--color-text-muted);
-    text-decoration: none;
-    padding: 0.3rem 0.5rem;
-    border-radius: 4px;
-    white-space: nowrap;
-    transition: color 0.2s, background 0.2s;
-  }
-
-  .header__page-link:hover {
-    color: var(--color-gold);
-    background: rgba(232, 170, 0, 0.08);
-    text-decoration: none;
-  }
 }
 
 /* ── Section footer (share + nav) ───────────────────────────────────────── */
@@ -1097,6 +1006,53 @@
   text-decoration: none;
 }
 
+/* ── Fast badge (today's fast, in both headers) ─────────────────────────── */
+.fast-badge {
+  margin-left: auto;
+  margin-right: 0.5rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  background: rgba(192, 64, 64, 0.12);
+  border: 1px solid rgba(192, 64, 64, 0.4);
+  color: #e08080;
+  transition: background 0.2s;
+}
+
+.fast-badge:hover {
+  background: rgba(192, 64, 64, 0.22);
+}
+
+/* The home header has no room for it on phones, or beside the nav until
+   there's room for the longest name. */
+@media (max-width: 640px), (min-width: 1440px) and (max-width: 1599px) {
+  .header__actions .fast-badge {
+    display: none;
+  }
+}
+
+/* Likewise beside the inner pages' nav until there's room for the longest name. */
+@media (min-width: 1280px) and (max-width: 1399px) {
+  .page-shell__header .fast-badge {
+    display: none;
+  }
+}
+
+/* The home header's actions are wider, so its copy of the nav needs ~1360px. */
+@media (max-width: 1439px) {
+  header:not(.page-shell__header) .page-shell__nav {
+    display: none;
+  }
+}
+
 /* ── PageShell ──────────────────────────────────────────────────────────── */
 .page-shell {
   min-height: 100vh;
@@ -1113,14 +1069,24 @@
   display: none;
 }
 
-@media (min-width: 768px) {
+/* The full nav needs ~1180px on one line; below that, the menu button. */
+@media (min-width: 1280px) {
+  .page-shell__header .header__menu-btn {
+    display: none;
+  }
+
   .page-shell__nav {
     display: flex;
     align-items: center;
     gap: 0.25rem;
     flex: 1;
     justify-content: center;
-    flex-wrap: wrap;
+  }
+
+  .page-shell__nav-more {
+    background: none;
+    border: none;
+    cursor: pointer;
   }
 
   .page-shell__nav-link {
@@ -1848,11 +1814,6 @@
   position: relative;
 }
 
-.header__nav-link--sacraments {
-  color: var(--color-gold) !important;
-  opacity: 1 !important;
-}
-
 .header__dropdown {
   display: none;
   position: absolute;
@@ -1868,6 +1829,16 @@
   padding: 0.4rem 0;
   z-index: 300;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Bridges the 6px gap so the menu stays open while the pointer crosses it. */
+.header__dropdown::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
 }
 
 .header__dropdown-wrapper:hover .header__dropdown,
@@ -1931,11 +1902,6 @@
 }
 
 /* ─── THE FATHERS NAV LINKS ─── */
-.header__nav-link--fathers {
-  color: var(--color-gold) !important;
-  opacity: 0.9;
-}
-
 .page-shell__nav-link--fathers {
   color: var(--color-gold) !important;
   opacity: 0.9;

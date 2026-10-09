@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FATHERS } from '../data/fathers';
 import './AskAFather.css';
@@ -22,8 +22,92 @@ const PAGE_CONTEXT = {
 
 const DEFAULT_SUGGESTIONS = ['What is Coptic Christianity?', 'How is this different from the church I grew up in?', 'Why do Coptic Christians venerate saints?', 'What do the Church Fathers have to do with the Bible?'];
 
+// The saints calendar files some Fathers under a second id.
+const FATHER_ALIASES = {
+  'basil-great': 'basil',
+  'john-chrysostom': 'chrysostom',
+  'gregory-theologian': 'gregory-nazianzus',
+  'ignatius-antioch': 'ignatius',
+  'justin-martyr': 'justin',
+};
+
 function getFatherByID(id) {
-  return FATHERS.find(f => f.id === id);
+  const canonical = FATHER_ALIASES[id] ?? id;
+  return FATHERS.find(f => f.id === canonical);
+}
+
+const shortName = father => father.name.replace(/^(Saint|The Scholar)\s/, '');
+
+// Context for a /fathers/:id profile; father_id focuses the graph's retrieval on him.
+function fatherContext(id) {
+  const father = getFatherByID(id);
+  if (!father) return null;
+  const name = shortName(father);
+  return {
+    topic: father.name,
+    father_id: father.id,
+    suggestions: [
+      `What did ${name} teach, and why does it matter today?`,
+      `How did ${name} shape the Coptic Orthodox faith?`,
+      `What can a modern Christian learn from ${name}'s life?`,
+    ],
+  };
+}
+
+// Names to link in answer prose. Only unambiguous forms: "Cyril" or "Gregory"
+// alone could be either of two Fathers, so those need their qualifier.
+const NAME_FORMS = {
+  athanasius: ['Athanasius'],
+  augustine: ['Augustine'],
+  basil: ['Basil'],
+  'clement-alexandria': ['Clement of Alexandria'],
+  'clement-rome': ['Clement of Rome'],
+  cyprian: ['Cyprian'],
+  'cyril-alexandria': ['Cyril of Alexandria'],
+  'cyril-jerusalem': ['Cyril of Jerusalem'],
+  ephrem: ['Ephrem'],
+  'gregory-nazianzus': ['Gregory of Nazianzus', 'Gregory Nazianzus', 'Gregory the Theologian'],
+  'gregory-nyssa': ['Gregory of Nyssa'],
+  ignatius: ['Ignatius'],
+  irenaeus: ['Irenaeus'],
+  chrysostom: ['John Chrysostom', 'Chrysostom'],
+  justin: ['Justin Martyr', 'Justin'],
+  origen: ['Origen'],
+};
+const NAME_TO_ID = Object.fromEntries(
+  Object.entries(NAME_FORMS).flatMap(([id, forms]) => forms.map(f => [f, id]))
+);
+const NAME_RE = new RegExp(
+  `\\b((?:Saint|St\\.?)\\s+)?(${Object.keys(NAME_TO_ID).sort((a, b) => b.length - a.length).join('|')})\\b`,
+  'g'
+);
+
+/** Split prose into text and profile links — first mention of each Father only. */
+function linkFathers(text, linked, skipId) {
+  const out = [];
+  let last = 0;
+  for (const m of text.matchAll(NAME_RE)) {
+    const id = NAME_TO_ID[m[2]];
+    if (linked.has(id) || id === skipId) continue;
+    linked.add(id);
+    out.push(text.slice(last, m.index));
+    out.push(<Link key={m.index} to={`/fathers/${id}`} className="acf-msg__father-link">{m[0]}</Link>);
+    last = m.index + m[0].length;
+  }
+  out.push(text.slice(last));
+  return out;
+}
+
+const STORAGE_KEY = 'ask-father-messages';
+
+function loadMessages() {
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) ?? '[]');
+    // Drop anything left mid-flight by a navigation.
+    return saved.filter(m => !m.loading).map(m => ({ ...m, streaming: false }));
+  } catch {
+    return [];
+  }
 }
 
 // ── Citation Card ─────────────────────────────────────────────
@@ -59,7 +143,7 @@ function CitationCard({ citation }) {
 }
 
 // ── Message ───────────────────────────────────────────────────
-function Message({ msg }) {
+function Message({ msg, focusFatherId }) {
   if (msg.role === 'user') {
     return (
       <div className="acf-msg acf-msg--user">
@@ -87,13 +171,14 @@ function Message({ msg }) {
 
   const { answer = '', citations = [], scripture = [], suggestedFollowUps = [], streaming } = msg;
   const paragraphs = answer.split('\n\n');
+  const linked = new Set();
 
   return (
     <div className="acf-msg acf-msg--father">
       <div className="acf-msg__answer">
         {paragraphs.map((para, i) => (
           <p key={i}>
-            {para}
+            {linkFathers(para, linked, focusFatherId)}
             {streaming && i === paragraphs.length - 1 && (
               <span className="acf-cursor" aria-hidden="true" />
             )}
@@ -135,7 +220,7 @@ function Message({ msg }) {
 // ── Main Widget ───────────────────────────────────────────────
 export default function AskAFather() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(loadMessages);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [hasUnread, setHasUnread] = useState(false);
@@ -144,12 +229,24 @@ export default function AskAFather() {
   const inputRef = useRef(null);
   const location = useLocation();
 
-  const pageCtx = PAGE_CONTEXT[location.pathname] ?? null;
+  const fatherId = location.pathname.match(/^\/fathers\/([^/]+)$/)?.[1];
+  const pageCtx = useMemo(
+    () => (fatherId ? fatherContext(fatherId) : PAGE_CONTEXT[location.pathname] ?? null),
+    [fatherId, location.pathname]
+  );
   const suggestions = pageCtx?.suggestions ?? DEFAULT_SUGGESTIONS;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages)); } catch { /* storage unavailable */ }
   }, [messages]);
+
+  // Lets pages open the drawer, e.g. the "Ask about …" button on a Father's profile.
+  useEffect(() => {
+    const openDrawer = () => setOpen(true);
+    window.addEventListener('ask-father:open', openDrawer);
+    return () => window.removeEventListener('ask-father:open', openDrawer);
+  }, []);
 
   useEffect(() => {
     if (open) {
@@ -322,7 +419,7 @@ export default function AskAFather() {
               </p>
             </div>
           ) : (
-            messages.map(msg => <Message key={msg.id} msg={msg} />)
+            messages.map(msg => <Message key={msg.id} msg={msg} focusFatherId={pageCtx?.father_id} />)
           )}
           <div ref={messagesEndRef} />
         </div>

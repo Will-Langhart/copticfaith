@@ -3,11 +3,14 @@
  *
  * FEAST_READINGS: keyed by `${copticMonth}-${copticDay}` for fixed feast days.
  * WEEKLY_READINGS: fallback cycle by day-of-week (0=Sun … 6=Sat).
- * SEASON_READINGS: overrides for major liturgical seasons (Holy Week, etc.)
+ * MOVEABLE_FEASTS: keyed by days from Coptic Pascha (Palm Sunday … Pentecost).
  *
  * Scripture references use bible-api.com format: "Book chapter:verse[-verse]"
  * Multiple passages separated by semicolons (fetched individually).
  */
+
+import { daysFromPascha } from './pascha.js';
+import { getFast } from './fasts.js';
 
 export const FEAST_READINGS = {
 
@@ -55,73 +58,6 @@ export const FEAST_READINGS = {
     acts: 'Acts 7:9-15',
     gospel: 'Matthew 2:13-23',
     note: 'Christ hallows the land of Egypt, fulfilling "Out of Egypt I called my Son."',
-  },
-
-  // Palm Sunday — moveable, but fixed in Coptic reckoning to 1 day before Pascha week
-  // We approximate: Baramouda 8 in a typical year (use season override for Holy Week)
-  '8-8': {
-    feast: 'Palm Sunday — Entry into Jerusalem',
-    season: 'Holy Week',
-    pauline: 'Philippians 2:5-11',
-    catholic: 'Hebrews 9:11-14',
-    acts: 'Acts 2:36-41',
-    gospel: 'John 12:12-19',
-    note: 'Christ enters Jerusalem as King, riding on a donkey in fulfillment of the prophet Zechariah.',
-  },
-
-  // Good Friday — approximate Baramouda 13
-  '8-13': {
-    feast: 'Great Friday (Good Friday)',
-    season: 'Holy Week',
-    pauline: 'Hebrews 10:1-10',
-    catholic: '1 Peter 2:19-25',
-    acts: 'Acts 3:12-26',
-    gospel: 'John 19:17-37',
-    note: 'The Lamb of God is crucified for the sins of the world.',
-  },
-
-  // Holy Saturday — Baramouda 14
-  '8-14': {
-    feast: 'Holy Saturday — The Resurrection Vigil',
-    season: 'Holy Week',
-    pauline: 'Romans 6:3-11',
-    catholic: '1 Peter 3:18-22',
-    acts: 'Acts 2:22-32',
-    gospel: 'Matthew 28:1-10',
-    note: 'Christ descends to Hades and rises, trampling death by death.',
-  },
-
-  // Feast of Resurrection (Pascha) — Baramouda 15 (approximate)
-  '8-15': {
-    feast: 'The Holy Resurrection (Pascha)',
-    season: 'Great Feast of the Lord',
-    pauline: '1 Corinthians 15:20-28',
-    catholic: '1 John 1:1-4',
-    acts: 'Acts 10:34-43',
-    gospel: 'John 20:1-18',
-    note: 'Christ is risen from the dead, trampling down death by death, and upon those in the tombs bestowing life.',
-  },
-
-  // Ascension — 40 days after Pascha, approximately Bashans 25
-  '9-25': {
-    feast: 'Ascension of our Lord Jesus Christ',
-    season: 'Great Feast of the Lord',
-    pauline: 'Ephesians 4:7-13',
-    catholic: '1 Peter 3:18-22',
-    acts: 'Acts 1:1-11',
-    gospel: 'Luke 24:44-53',
-    note: 'Christ ascends in glory to the right hand of the Father, promising the Spirit.',
-  },
-
-  // Pentecost — 50 days after Pascha, approximately Ba\'ouna 5
-  '10-5': {
-    feast: 'Pentecost — Descent of the Holy Spirit',
-    season: 'Great Feast of the Lord',
-    pauline: 'Ephesians 1:13-23',
-    catholic: '1 John 4:1-6',
-    acts: 'Acts 2:1-21',
-    gospel: 'John 14:15-26',
-    note: 'The Holy Spirit descends on the Apostles, and the Church is born.',
   },
 
   // Transfiguration — 13 Misra
@@ -273,6 +209,79 @@ export const FEAST_READINGS = {
 };
 
 /**
+ * MOVEABLE_FEASTS: keyed by days from Coptic Pascha (see pascha.js).
+ * These take precedence over FEAST_READINGS when both fall on the same day.
+ */
+export const MOVEABLE_FEASTS = {
+
+  // Palm Sunday — one week before Pascha
+  '-7': {
+    feast: 'Palm Sunday — Entry into Jerusalem',
+    season: 'Holy Week',
+    pauline: 'Philippians 2:5-11',
+    catholic: 'Hebrews 9:11-14',
+    acts: 'Acts 2:36-41',
+    gospel: 'John 12:12-19',
+    note: 'Christ enters Jerusalem as King, riding on a donkey in fulfillment of the prophet Zechariah.',
+  },
+
+  // Great Friday
+  '-2': {
+    feast: 'Great Friday (Good Friday)',
+    season: 'Holy Week',
+    pauline: 'Hebrews 10:1-10',
+    catholic: '1 Peter 2:19-25',
+    acts: 'Acts 3:12-26',
+    gospel: 'John 19:17-37',
+    note: 'The Lamb of God is crucified for the sins of the world.',
+  },
+
+  // Holy Saturday
+  '-1': {
+    feast: 'Holy Saturday — The Resurrection Vigil',
+    season: 'Holy Week',
+    pauline: 'Romans 6:3-11',
+    catholic: '1 Peter 3:18-22',
+    acts: 'Acts 2:22-32',
+    gospel: 'Matthew 28:1-10',
+    note: 'Christ descends to Hades and rises, trampling death by death.',
+  },
+
+  // Feast of the Resurrection (Pascha)
+  '0': {
+    feast: 'The Holy Resurrection (Pascha)',
+    season: 'Great Feast of the Lord',
+    pauline: '1 Corinthians 15:20-28',
+    catholic: '1 John 1:1-4',
+    acts: 'Acts 10:34-43',
+    gospel: 'John 20:1-18',
+    note: 'Christ is risen from the dead, trampling down death by death, and upon those in the tombs bestowing life.',
+  },
+
+  // Ascension — Thursday, the 40th day of Pascha
+  '39': {
+    feast: 'Ascension of our Lord Jesus Christ',
+    season: 'Great Feast of the Lord',
+    pauline: 'Ephesians 4:7-13',
+    catholic: '1 Peter 3:18-22',
+    acts: 'Acts 1:1-11',
+    gospel: 'Luke 24:44-53',
+    note: 'Christ ascends in glory to the right hand of the Father, promising the Spirit.',
+  },
+
+  // Pentecost — the 50th day of Pascha
+  '49': {
+    feast: 'Pentecost — Descent of the Holy Spirit',
+    season: 'Great Feast of the Lord',
+    pauline: 'Ephesians 1:13-23',
+    catholic: '1 John 4:1-6',
+    acts: 'Acts 2:1-21',
+    gospel: 'John 14:15-26',
+    note: 'The Holy Spirit descends on the Apostles, and the Church is born.',
+  },
+};
+
+/**
  * Day-of-week fallback readings (0 = Sunday … 6 = Saturday).
  * These rotate through major NT themes across the week.
  */
@@ -336,30 +345,33 @@ export const WEEKLY_READINGS = [
 ];
 
 /**
- * Get the readings for a given Coptic date + Gregorian day-of-week.
+ * Get the readings for a given Gregorian date and its Coptic month/day.
  * Returns the readings object (feast or weekly fallback) plus metadata.
  */
-export function getReadingsForDay(copticMonth, copticDay, dayOfWeek, copticMonthName) {
-  const key = `${copticMonth}-${copticDay}`;
-  const feast = FEAST_READINGS[key];
+export function getReadingsForDay(date, copticMonth, copticDay) {
+  const dayOfWeek = date.getDay();
+  const fast = getFast(date);
+  const feast =
+    MOVEABLE_FEASTS[daysFromPascha(date)] ??
+    FEAST_READINGS[`${copticMonth}-${copticDay}`];
 
   if (feast) {
     return {
       ...feast,
       isFeast: true,
       label: feast.feast,
+      fast,
       dayOfWeek,
     };
   }
 
   const weekly = WEEKLY_READINGS[dayOfWeek];
-  const isFastDay = dayOfWeek === 3 || dayOfWeek === 5; // Wed & Fri
   return {
     ...weekly,
     isFeast: false,
     label: weekly.theme,
-    season: isFastDay ? 'Fasting Day' : 'Ordinary Day',
-    isFastDay,
+    season: fast ? undefined : 'Ordinary Day',
+    fast,
     dayOfWeek,
   };
 }

@@ -124,8 +124,6 @@ export default function MainPage() {
 
       <Header
         visible={headerVisible}
-        sections={SECTIONS}
-        activeId={activeSection}
         onNavigateClick={() => setNavOpen(true)}
         onSelect={scrollTo}
         onSearchClick={() => setSearchOpen(true)}

@@ -84,6 +84,13 @@ export default function FatherProfilePage() {
               <em>{father.epithet}</em>
               <span className="fp-hero__epithet-ornament" aria-hidden="true">✦</span>
             </div>
+            <button
+              type="button"
+              className="fp-hero__ask"
+              onClick={() => window.dispatchEvent(new Event('ask-father:open'))}
+            >
+              Ask about {father.name.replace(/^(Saint|The Scholar)\s/, '')} →
+            </button>
           </div>
         </header>
 
