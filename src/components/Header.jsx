@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import { SHORT_LABELS } from '../data/sectionMeta';
 import i18n from '../i18n/index';
+import FastBadge from './FastBadge';
 
 export default function Header({ visible, sections = [], activeId, onNavigateClick, onSelect, onSearchClick, onTocClick }) {
   const { t } = useTranslation();
@@ -80,6 +81,8 @@ export default function Header({ visible, sections = [], activeId, onNavigateCli
       </nav>
 
       <div className="header__actions">
+        <FastBadge />
+
         {/* Search button */}
         <button
           className="header__icon-btn"

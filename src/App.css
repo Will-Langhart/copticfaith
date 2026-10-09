@@ -1097,6 +1097,44 @@
   text-decoration: none;
 }
 
+/* ── Fast badge (today's fast, in both headers) ─────────────────────────── */
+.fast-badge {
+  margin-left: auto;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  background: rgba(192, 64, 64, 0.12);
+  border: 1px solid rgba(192, 64, 64, 0.4);
+  color: #e08080;
+  transition: background 0.2s;
+}
+
+.fast-badge:hover {
+  background: rgba(192, 64, 64, 0.22);
+}
+
+/* The home header has no room for it on phones, or beside its section nav
+   until the screen is wide enough for that nav to fit on one line. */
+@media (max-width: 640px), (min-width: 1280px) and (max-width: 1599px) {
+  .header__actions .fast-badge {
+    display: none;
+  }
+}
+
+/* Likewise beside the inner pages' nav, which wraps below 1440px. */
+@media (min-width: 768px) and (max-width: 1439px) {
+  .page-shell__header .fast-badge {
+    display: none;
+  }
+}
+
 /* ── PageShell ──────────────────────────────────────────────────────────── */
 .page-shell {
   min-height: 100vh;

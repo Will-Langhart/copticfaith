@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import AskAFather from './AskAFather';
+import FastBadge from './FastBadge';
 
 export default function PageShell({ children, title }) {
   const { t } = useTranslation();
@@ -41,6 +42,8 @@ export default function PageShell({ children, title }) {
           <Link to="/scripture-index" className="page-shell__nav-link">{t('header.scripture_index')}</Link>
           <Link to="/contact" className="page-shell__nav-link">{t('header.contact')}</Link>
         </nav>
+
+        <FastBadge />
 
         <button
           className="dark-toggle header__icon-btn"
