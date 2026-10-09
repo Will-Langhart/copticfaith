@@ -115,7 +115,6 @@ export default function DailyReadingsPage() {
   }
 
   const isToday = date.toDateString() === new Date().toDateString();
-  const isFastDay = readings.isFastDay;
 
   return (
     <PageShell title="Daily Readings">
@@ -163,8 +162,8 @@ export default function DailyReadingsPage() {
             <span className={`dr-header__day-badge dr-header__day-badge--${DAYS[date.getDay()].toLowerCase()}`}>
               {DAYS[date.getDay()]}
             </span>
-            {isFastDay && (
-              <span className="dr-header__fast-badge">Fasting Day</span>
+            {readings.fast && (
+              <span className="dr-header__fast-badge">{readings.fast}</span>
             )}
             {readings.season && (
               <span className="dr-header__season-badge">{readings.season}</span>

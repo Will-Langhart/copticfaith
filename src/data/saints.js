@@ -613,25 +613,16 @@ export const COPTIC_MONTHS = [
  * Returns { month: number, day: number, monthName: string }
  */
 export function gregorianToCoptic(date) {
-  const m = date.getMonth() + 1; // 1-based
-  const d = date.getDate();
+  // Arithmetic Coptic calendar (Reingold & Dershowitz), on R.D. day numbers.
+  const COPTIC_EPOCH = 103605; // R.D. of 1 Tout, year 1 A.M.
+  const rd = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000 + 719163;
+  const fixedFromCoptic = (y, m, d) =>
+    COPTIC_EPOCH - 1 + 365 * (y - 1) + Math.floor(y / 4) + 30 * (m - 1) + d;
 
-  for (let i = COPTIC_MONTHS.length - 1; i >= 0; i--) {
-    const cm = COPTIC_MONTHS[i];
-    const { m: sm, d: sd } = cm.gregStart;
-    // Check if date >= this month's Gregorian start
-    if (m > sm || (m === sm && d >= sd)) {
-      const day = (m === sm) ? d - sd + 1 : (() => {
-        // Days from sm/sd to end of that Gregorian month, then into m/d
-        const start = new Date(date.getFullYear(), sm - 1, sd);
-        const diffMs = date - start;
-        return Math.floor(diffMs / 86400000) + 1;
-      })();
-      return { month: cm.num, day: Math.min(day, cm.days), monthName: cm.name };
-    }
-  }
-  // Fallback: Nasi
-  return { month: 13, day: 1, monthName: 'Nasi' };
+  const year = Math.floor((4 * (rd - COPTIC_EPOCH) + 1463) / 1461);
+  const month = Math.floor((rd - fixedFromCoptic(year, 1, 1)) / 30) + 1;
+  const day = rd + 1 - fixedFromCoptic(year, month, 1);
+  return { month, day, monthName: COPTIC_MONTHS[month - 1].name };
 }
 
 export function getSaintsForDay(copticMonth, copticDay) {

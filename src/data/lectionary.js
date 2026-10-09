@@ -10,6 +10,7 @@
  */
 
 import { daysFromPascha } from './pascha.js';
+import { getFast } from './fasts.js';
 
 export const FEAST_READINGS = {
 
@@ -349,6 +350,7 @@ export const WEEKLY_READINGS = [
  */
 export function getReadingsForDay(date, copticMonth, copticDay) {
   const dayOfWeek = date.getDay();
+  const fast = getFast(date);
   const feast =
     MOVEABLE_FEASTS[daysFromPascha(date)] ??
     FEAST_READINGS[`${copticMonth}-${copticDay}`];
@@ -358,18 +360,18 @@ export function getReadingsForDay(date, copticMonth, copticDay) {
       ...feast,
       isFeast: true,
       label: feast.feast,
+      fast,
       dayOfWeek,
     };
   }
 
   const weekly = WEEKLY_READINGS[dayOfWeek];
-  const isFastDay = dayOfWeek === 3 || dayOfWeek === 5; // Wed & Fri
   return {
     ...weekly,
     isFeast: false,
     label: weekly.theme,
-    season: isFastDay ? 'Fasting Day' : 'Ordinary Day',
-    isFastDay,
+    season: fast ? undefined : 'Ordinary Day',
+    fast,
     dayOfWeek,
   };
 }
