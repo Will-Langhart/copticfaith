@@ -10,7 +10,7 @@ CopticFaith is a React + Vite + Tailwind web application serving as a theologica
 - Routes are registered in `src/router/routes.jsx` (lazy-loaded)
 - Global styles use CSS tokens in `src/index.css` and `src/App.css`
 - Design tokens: `--color-bg`, `--color-gold`, `--color-text`, `--font-heading` (Cormorant Garamond), `--font-body` (DM Sans)
-- Nav links must be added to both `NavOverlay.jsx` and `PageShell.jsx`
+- Nav links must be added to both `NavOverlay.jsx` and `SiteNav.jsx` (shared by the home `Header` and `PageShell`)
 
 ---
 

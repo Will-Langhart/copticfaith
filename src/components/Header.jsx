@@ -1,11 +1,10 @@
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
-import { SHORT_LABELS } from '../data/sectionMeta';
 import i18n from '../i18n/index';
 import FastBadge from './FastBadge';
+import SiteNav from './SiteNav';
 
-export default function Header({ visible, sections = [], activeId, onNavigateClick, onSelect, onSearchClick, onTocClick }) {
+export default function Header({ visible, onNavigateClick, onSelect, onSearchClick, onTocClick }) {
   const { t } = useTranslation();
   const { theme, toggle } = useTheme();
 
@@ -36,49 +35,7 @@ export default function Header({ visible, sections = [], activeId, onNavigateCli
         <span className="header__logo-text">{t('site_title')}</span>
       </a>
 
-      <nav className="header__nav" aria-label="Section navigation">
-        <ul className="header__nav-list">
-          {sections.map(({ id, title }) => (
-            <li key={id} className="header__nav-item">
-              <a
-                href={`#${id}`}
-                className={`header__nav-link ${activeId === id ? 'header__nav-link--active' : ''}`}
-                onClick={(e) => handleNavClick(e, id)}
-                title={title}
-              >
-                {t(`nav.${id}`, { defaultValue: SHORT_LABELS[id] ?? title })}
-              </a>
-            </li>
-          ))}
-          <li className="header__nav-item header__nav-item--divider" aria-hidden="true" />
-          <li className="header__nav-item header__dropdown-wrapper">
-            <Link to="/sacraments" className="header__nav-link header__nav-link--page header__nav-link--sacraments">
-              The Seven Mysteries ▾
-            </Link>
-            <ul className="header__dropdown" role="menu">
-              <li><Link to="/baptism" className="header__dropdown-link">I. Baptism</Link></li>
-              <li><Link to="/chrismation" className="header__dropdown-link">II. Chrismation</Link></li>
-              <li><Link to="/confession" className="header__dropdown-link">III. Confession</Link></li>
-              <li><Link to="/eucharist" className="header__dropdown-link">IV. Eucharist</Link></li>
-              <li><Link to="/unction" className="header__dropdown-link">V. Unction of the Sick</Link></li>
-              <li><Link to="/matrimony" className="header__dropdown-link">VI. Matrimony</Link></li>
-              <li><Link to="/holy-orders" className="header__dropdown-link">VII. Holy Orders</Link></li>
-            </ul>
-          </li>
-          <li className="header__nav-item header__nav-item--divider" aria-hidden="true" />
-          <li className="header__nav-item">
-            <Link to="/salvation" className="header__nav-link header__nav-link--page">Salvation</Link>
-          </li>
-          <li className="header__nav-item header__nav-item--divider" aria-hidden="true" />
-          <li className="header__nav-item">
-            <Link to="/church-history" className="header__nav-link header__nav-link--page">Church History</Link>
-          </li>
-          <li className="header__nav-item header__nav-item--divider" aria-hidden="true" />
-          <li className="header__nav-item">
-            <Link to="/fathers" className="header__nav-link header__nav-link--page header__nav-link--fathers">The Fathers</Link>
-          </li>
-        </ul>
-      </nav>
+      <SiteNav />
 
       <div className="header__actions">
         <FastBadge />
@@ -107,14 +64,6 @@ export default function Header({ visible, sections = [], activeId, onNavigateCli
             <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
           </svg>
         </button>
-
-        {/* More pages dropdown links */}
-        <nav className="header__pages-nav" aria-label="Additional pages">
-          <Link to="/reading-list" className="header__page-link">{t('header.reading_list')}</Link>
-          <Link to="/faq" className="header__page-link">{t('header.faq')}</Link>
-          <Link to="/glossary" className="header__page-link">{t('header.glossary')}</Link>
-          <Link to="/contact" className="header__page-link">{t('header.contact')}</Link>
-        </nav>
 
         {/* Dark/light toggle */}
         <button

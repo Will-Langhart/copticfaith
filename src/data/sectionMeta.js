@@ -15,19 +15,3 @@ export const SECTIONS = [
 ];
 
 export const TOTAL_READING_MINUTES = SECTIONS.reduce((sum, s) => sum + s.readingMinutes, 0);
-
-// Short labels used in the header nav tabs
-export const SHORT_LABELS = {
-  hero:       'Home',
-  note:       'Note',
-  foundation: 'Biblical',
-  historical: 'History',
-  doctrines:  'Doctrines',
-  eucharist:  'Eucharist',
-  mysteries:  'Mysteries',
-  fasting:    'Fasting',
-  saints:     'Saints',
-  types:      'Types',
-  liturgy:    'Liturgy',
-  conclusion: 'Conclusion',
-};
