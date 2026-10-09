@@ -18,11 +18,15 @@ class Retriever:
         self._pc = Pinecone(api_key=settings.PINECONE_API_KEY)
         self._index = self._pc.Index(settings.PINECONE_INDEX)
 
-    def search(self, query: str, k: int = settings.TOP_K) -> list[dict]:
+    def search(self, query: str, k: int = settings.TOP_K, subject_ids: list[str] | None = None) -> list[dict]:
+        """Top-k chunks for `query`; `subject_ids` restricts results to those subjects."""
         candidates = max(settings.RERANK_CANDIDATES, k)
+        q = {"inputs": {"text": query}, "top_k": candidates}
+        if subject_ids:
+            q["filter"] = {"subject_id": {"$in": subject_ids}}
         res = self._index.search(
             namespace=settings.PINECONE_NAMESPACE,
-            query={"inputs": {"text": query}, "top_k": candidates},
+            query=q,
             # Rerank the full candidate set (not just k) so dedup has room to work.
             rerank={"model": settings.RERANK_MODEL, "top_n": candidates, "rank_fields": ["text"]},
         )

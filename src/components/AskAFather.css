@@ -723,3 +723,15 @@
   color: rgba(245, 240, 230, 0.7);
   background: rgba(255, 255, 255, 0.02);
 }
+
+/* Father names linked inside the answer prose */
+.acf-msg__father-link {
+  color: var(--color-gold);
+  text-decoration: underline;
+  text-decoration-color: rgba(232, 170, 0, 0.4);
+  text-underline-offset: 2px;
+}
+
+.acf-msg__father-link:hover {
+  text-decoration-color: var(--color-gold);
+}

@@ -36,6 +36,7 @@ class State(TypedDict, total=False):
     question: str
     page_context: Optional[dict]
     journey_stage: Optional[str]
+    focus_name: Optional[str]
     retrieved: List[dict]
     answer: str
     proposed: dict
@@ -119,16 +120,56 @@ def _verified_quotes_block(retrieved: List[dict]) -> str:
     return "\n".join(lines)
 
 
+# ── Father focus (questions asked from a /fathers/:id profile) ──
+# The saints calendar files some Fathers under a second id; search both.
+FATHER_ALIASES = {
+    "basil": ["basil-great"],
+    "chrysostom": ["john-chrysostom"],
+    "gregory-nazianzus": ["gregory-theologian"],
+    "ignatius": ["ignatius-antioch"],
+    "justin": ["justin-martyr"],
+}
+FOCUS_K = 3  # how many of TOP_K slots the focused Father's own sources may take
+
+
+def _focus_father_id(state: State) -> Optional[str]:
+    fid = (state.get("page_context") or {}).get("father_id")
+    return fid if isinstance(fid, str) and re.fullmatch(r"[a-z0-9-]{1,40}", fid) else None
+
+
+def _merge(focused: List[dict], general: List[dict], k: int) -> List[dict]:
+    """Focused hits first, then general hits not already present, capped at k."""
+    out, seen = [], set()
+    for h in focused + general:
+        if h["chunk_id"] in seen:
+            continue
+        seen.add(h["chunk_id"])
+        out.append(h)
+        if len(out) >= k:
+            break
+    return out
+
+
 # ── Nodes ─────────────────────────────────────────────────────
-def _search(question: str, k: int) -> List[dict]:
+def _search(question: str, k: int, subject_ids: Optional[List[str]] = None) -> List[dict]:
     # Runs in a worker thread — keeps the Pinecone HTTP call off the event loop.
-    return get_retriever().search(question, k)
+    return get_retriever().search(question, k, subject_ids)
 
 
 async def retrieve(state: State) -> dict:
     get_stream_writer()({"kind": "status", "text": "Searching the Fathers…"})
-    hits = await asyncio.to_thread(_search, state["question"], settings.TOP_K)
-    return {"retrieved": hits}
+    question = state["question"]
+    fid = _focus_father_id(state)
+    if not fid:
+        return {"retrieved": await asyncio.to_thread(_search, question, settings.TOP_K)}
+
+    focused, general = await asyncio.gather(
+        asyncio.to_thread(_search, question, FOCUS_K, [fid, *FATHER_ALIASES.get(fid, [])]),
+        asyncio.to_thread(_search, question, settings.TOP_K),
+    )
+    # Name comes from the index, not the client, so it is safe to put in the prompt.
+    focus_name = next((h["subject_name"] for h in focused if h.get("subject_name")), None)
+    return {"retrieved": _merge(focused, general, settings.TOP_K), "focus_name": focus_name}
 
 
 async def synthesize(state: State) -> dict:
@@ -140,8 +181,16 @@ async def synthesize(state: State) -> dict:
         prefix.append(tone)
     if (pc := state.get("page_context")) and pc.get("topic"):
         prefix.append(f"The visitor is currently reading about: {pc['topic']}.")
+    if name := state.get("focus_name"):
+        prefix.append(
+            f"The visitor asked this from the profile page of {name}. Center the answer on {name}'s own "
+            "teaching and life, leaning first on the sources about him (listed first below); bring in other "
+            "Fathers or Scripture only as they illuminate his thought. Speak about him in the third person "
+            "— never write as though you were him."
+        )
 
-    top_score = retrieved[0].get("score", 0.0) if retrieved else 0.0
+    # Focused sources come first, so the list is no longer strictly best-first.
+    top_score = max((r.get("score", 0.0) for r in retrieved), default=0.0)
     if not retrieved or top_score < settings.RELEVANCE_FLOOR:
         prefix.append(
             "The sources below only weakly match this question. Answer briefly from what is genuinely "
@@ -170,6 +219,7 @@ async def meta(state: State) -> dict:
         f"if none genuinely fit, return no citations):\n{quotes_block}\n\n"
         f"CONTEXT (for scripture and follow-ups only):\n{_context_block(retrieved)}\n\n"
         "Provide citations drawn only from the quotes list above, relevant scripture, and exactly two follow-up questions."
+        + (f" Prefer quotes from {name} when they fit." if (name := state.get("focus_name")) else "")
     )
     out: MetaOut = await _meta_model().ainvoke([SystemMessage(META_SYSTEM), HumanMessage(user)])
     return {"proposed": out.model_dump()}
