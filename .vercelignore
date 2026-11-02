@@ -1,0 +1,2 @@
+# Standalone tools with their own package.json; not part of the site deploy.
+services/
