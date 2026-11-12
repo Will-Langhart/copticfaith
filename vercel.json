@@ -2,5 +2,15 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/:page(sacraments|baptism|chrismation|eucharist|confession|unction|matrimony|holy-orders|salvation|fathers|church-history|intercession-of-saints|saints-calendar|daily-readings|books|reading-list|scripture-index|glossary|faq|contact)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/fathers/:id(athanasius|augustine|basil|clement-alexandria|clement-rome|cyprian|cyril-alexandria|cyril-jerusalem|ephrem|gregory-nazianzus|gregory-nyssa|ignatius|irenaeus|chrysostom|justin|origen)",
+      "destination": "/index.html"
+    }
+  ]
 }

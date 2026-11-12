@@ -8,11 +8,14 @@ import {
   gregorianToCoptic,
   getSaintsForDay,
   getSaintsForMonth,
+  getNextFeast,
 } from '../data/saints';
 import './SaintsCalendarPage.css';
 
 /* ── Today's Coptic date ─────────────────────────────────── */
 const TODAY_COPTIC = gregorianToCoptic(new Date());
+const NEXT_FEAST = getNextFeast(TODAY_COPTIC.month, TODAY_COPTIC.day);
+const feastDate = saint => `${saint.copticDay} ${COPTIC_MONTHS[saint.copticMonth - 1]?.name}`;
 
 /* ── Saint Card ──────────────────────────────────────────── */
 function SaintCard({ saint, onClick, isSelected }) {
@@ -167,7 +170,9 @@ export default function SaintsCalendarPage() {
                   .join(' · ')}
               </span>
             ) : (
-              <span className="sc-today__feasts sc-today__feasts--none">No major feast recorded today</span>
+              <span className="sc-today__feasts">
+                Next feast: {NEXT_FEAST.name} · {feastDate(NEXT_FEAST)}
+              </span>
             )}
             <button
               className="sc-today__jump"
@@ -259,9 +264,30 @@ export default function SaintsCalendarPage() {
                 </div>
 
                 {saintsForDay.length === 0 ? (
-                  <p className="sc-empty">
-                    No major feasts are recorded for this day in our calendar. The full Coptic Synaxarium contains thousands of entries — this is a curated selection of the most significant saints.
-                  </p>
+                  /* A day without a listed feast shows the month's feasts, so the
+                     page always opens on real saints rather than an empty panel. */
+                  <div className="sc-month-feasts">
+                    <p className="sc-empty">
+                      This calendar lists the major feasts of the Coptic Synaxarium, which commemorates saints on every day of the year.{' '}
+                      {saintsInMonth.length > 0
+                        ? `Feasts in ${COPTIC_MONTHS[selectedMonth - 1]?.name}:`
+                        : `The next feast is ${getNextFeast(selectedMonth, selectedDay).name} on ${feastDate(getNextFeast(selectedMonth, selectedDay))}.`}
+                    </p>
+                    {saintsInMonth.length > 0 && (
+                      <div className="sc-list">
+                        {saintsInMonth.map(saint => (
+                          <div key={saint.id} className="sc-month-feasts__item">
+                            <span className="sc-month-feasts__day">{feastDate(saint)}</span>
+                            <SaintCard
+                              saint={saint}
+                              onClick={s => { setSelectedDay(s.copticDay); setSelectedSaint(s); }}
+                              isSelected={false}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <div className="sc-list">
                     {saintsForDay.map(saint => (

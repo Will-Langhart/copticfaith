@@ -25,6 +25,16 @@ function setCanonical(href) {
   el.setAttribute('href', href);
 }
 
+// Add or remove <meta name="robots" content="noindex">.
+function setNoindex(noindex) {
+  const el = document.head.querySelector('meta[name="robots"]');
+  if (noindex) {
+    setMeta('meta[name="robots"]', 'name', 'robots', 'noindex');
+  } else if (el) {
+    el.remove();
+  }
+}
+
 /**
  * Root layout for every route. Keeps document metadata in sync with the
  * current path so JS-rendering crawlers and browser tabs get accurate,
@@ -34,11 +44,12 @@ export default function RootLayout() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const { title, description, canonical } = resolveMeta(pathname);
+    const { title, description, canonical, noindex } = resolveMeta(pathname);
 
     document.title = title;
     setMeta('meta[name="description"]', 'name', 'description', description);
     setCanonical(canonical);
+    setNoindex(noindex);
 
     setMeta('meta[property="og:title"]', 'property', 'og:title', title);
     setMeta('meta[property="og:description"]', 'property', 'og:description', description);

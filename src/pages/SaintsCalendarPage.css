@@ -44,11 +44,6 @@
   min-width: 200px;
 }
 
-.sc-today__feasts--none {
-  opacity: 0.65;
-  font-style: italic;
-}
-
 .sc-today__jump {
   background: rgba(0,0,0,0.15);
   border: none;
@@ -616,4 +611,18 @@
 .sc-about__col em {
   font-style: italic;
   color: var(--color-text);
+}
+
+/* Month's feasts, shown when the selected day has none */
+.sc-month-feasts .sc-empty {
+  margin-bottom: 1rem;
+}
+
+.sc-month-feasts__day {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-gold, #c9a227);
+  margin: 0 0 0.3rem 0.2rem;
 }
