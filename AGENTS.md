@@ -8,6 +8,7 @@ CopticFaith is a React + Vite + Tailwind web application serving as a theologica
 **Key conventions:**
 - Pages live in `src/pages/`, components in `src/components/`
 - Routes are registered in `src/router/routes.jsx` (lazy-loaded)
+- A new page also needs its path in the `vercel.json` rewrites (every other URL returns a real 404); `src/router/vercelRewrites.test.js` checks this
 - Global styles use CSS tokens in `src/index.css` and `src/App.css`
 - Design tokens: `--color-bg`, `--color-gold`, `--color-text`, `--font-heading` (Cormorant Garamond), `--font-body` (DM Sans)
 - Nav links must be added to both `NavOverlay.jsx` and `SiteNav.jsx` (shared by the home `Header` and `PageShell`)

@@ -21,3 +21,16 @@ test('gregorianToCoptic handles the sixth day of Nasi in Coptic leap years', () 
   assert.equal(coptic(2027, 9, 11), '6/13');
   assert.equal(coptic(2027, 9, 12), '1/1');
 });
+
+test('getNextFeast finds the next listed feast and wraps into the next year', async () => {
+  const { getNextFeast, SAINTS } = await import('./saints.js');
+  const next = getNextFeast(3, 3); // 3 Hator
+  assert.ok(next.copticMonth > 3 || (next.copticMonth === 3 && next.copticDay > 3));
+  const earlier = SAINTS.filter(s =>
+    (s.copticMonth > 3 || (s.copticMonth === 3 && s.copticDay > 3)) &&
+    (s.copticMonth * 100 + s.copticDay) < (next.copticMonth * 100 + next.copticDay));
+  assert.equal(earlier.length, 0);
+  // After the last day of Nasi it wraps to the first feast of the year.
+  const first = getNextFeast(0, 0);
+  assert.deepEqual(getNextFeast(13, 6), first);
+});

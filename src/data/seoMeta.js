@@ -123,7 +123,8 @@ const ROUTES = {
 
 /**
  * Resolve SEO metadata for a pathname, including dynamic Father profiles.
- * Always returns a title, description, and absolute canonical URL.
+ * Always returns a title, description, absolute canonical URL, and whether
+ * the page should be kept out of search results (noindex).
  */
 export function resolveMeta(pathname) {
   // Normalize trailing slash (except root)
@@ -147,11 +148,22 @@ export function resolveMeta(pathname) {
     }
   }
 
-  if (!meta) meta = { title: SITE.defaultTitle, description: SITE.defaultDescription };
+  // Unknown path (the in-app "Page Not Found" screen): give it its own
+  // title and keep it out of the index rather than passing it off as the
+  // home page, which Google reports as a soft 404.
+  if (!meta) {
+    return {
+      title: 'Page Not Found — CopticFaith',
+      description: SITE.defaultDescription,
+      canonical: `${SITE.baseUrl}${path}`,
+      noindex: true,
+    };
+  }
 
   return {
     title: meta.title,
     description: meta.description,
     canonical: `${SITE.baseUrl}${path === '/' ? '/' : path}`,
+    noindex: false,
   };
 }

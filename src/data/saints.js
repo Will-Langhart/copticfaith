@@ -630,7 +630,15 @@ export function getSaintsForDay(copticMonth, copticDay) {
 }
 
 export function getSaintsForMonth(copticMonth) {
-  return SAINTS.filter(s => s.copticMonth === copticMonth);
+  return SAINTS.filter(s => s.copticMonth === copticMonth).sort((a, b) => a.copticDay - b.copticDay);
+}
+
+/** The first feast after the given Coptic date, wrapping into the next year. */
+export function getNextFeast(copticMonth, copticDay) {
+  const key = s => s.copticMonth * 100 + s.copticDay;
+  const after = copticMonth * 100 + copticDay;
+  const sorted = [...SAINTS].sort((a, b) => key(a) - key(b));
+  return sorted.find(s => key(s) > after) ?? sorted[0];
 }
 
 export const CATEGORY_LABELS = {
